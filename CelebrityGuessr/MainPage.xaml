@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CelebrityGuessr.MainPage"
+             BackgroundColor="#070b1a"
+             IconImageSource="cblogo.png"
+             NavigationPage.HasNavigationBar="False">
+
+
+    <ContentPage.Resources>
+        <Color x:Key="MenuBGColor">#1a1a1a</Color>
+        <Color x:Key="SubMenuBGColor">#1c1c1c</Color>
+        <Color x:Key="AccentColor">#FFC107</Color>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="auto,auto,auto" ColumnDefinitions="*, auto, *" HorizontalOptions="Center">
+        <Image Source="cblogo.png"
+               Grid.Row="0"
+               Grid.Column="1"
+               WidthRequest="200"
+               HeightRequest="200"
+               Margin="10"
+               />
+        <VerticalStackLayout Padding="10" Grid.Row="1" Grid.Column="1">
+            <Border BackgroundColor="{StaticResource MenuBGColor}" 
+                StrokeThickness="0" 
+                StrokeShape="RoundRectangle 8,8,8,8"
+                WidthRequest="280">
+
+                <VerticalStackLayout Spacing="0">
+
+                    <Grid x:Name="MainButton"
+                      
+                          Padding="15" 
+                          HeightRequest="55">
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMainButtonClicked" />
+                        </Grid.GestureRecognizers>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+
+                        <Label Text="Graj" 
+                               TextColor="White" 
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Start"
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               Grid.Column="1"/>
+
+                        <Image x:Name="MainButtonIcon" 
+                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='White'}"
+                               Grid.Column="2"
+                               VerticalOptions="Center" 
+                               Margin="0,0,5,0" />
+                    </Grid>
+
+                    <VerticalStackLayout x:Name="SubButtonsContainer" 
+                                         Spacing="1"
+                                         BackgroundColor="{StaticResource SubMenuBGColor}">
+
+                        <Button Text="Podstawowy" 
+                                Clicked="OnNormalClicked"
+                                BackgroundColor="{StaticResource SubMenuBGColor}"
+                                TextColor="White"
+                                HeightRequest="50"
+                                CornerRadius="8"
+                                BorderColor="{StaticResource AccentColor}" 
+                                BorderWidth="1"
+                                HorizontalOptions="Fill"/>
+
+                        <Button Text="Zdjęcie" 
+                                Clicked="OnPictureClicked"
+                                BackgroundColor="{StaticResource SubMenuBGColor}"
+                                TextColor="White"
+                                HeightRequest="50"
+                                CornerRadius="8"
+                                BorderColor="{StaticResource AccentColor}" 
+                                BorderWidth="1"
+                                HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+        <VerticalStackLayout Padding="10" Grid.Row="2" Grid.Column="1">
+            <Border BackgroundColor="{StaticResource MenuBGColor}" 
+                StrokeThickness="0" 
+                StrokeShape="RoundRectangle 8,8,8,8"
+                WidthRequest="280">
+
+                <VerticalStackLayout Spacing="0">
+
+                    <Grid x:Name="MainButton2"
+                      
+                          Padding="15" 
+                          HeightRequest="55">
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnMainButtonClicked2" />
+                        </Grid.GestureRecognizers>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+
+                        <Label Text="Info" 
+                               TextColor="White" 
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Start"
+                               FontSize="16" 
+                               FontAttributes="Bold" 
+                               Grid.Column="1"/>
+
+                        <Image x:Name="MainButtonIcon2" 
+                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='White'}"
+                               Grid.Column="2"
+                               VerticalOptions="Center" 
+                               Margin="0,0,5,0" />
+                    </Grid>
+
+                    <VerticalStackLayout x:Name="SubButtonsContainer2" 
+                                         Spacing="1"
+                                         BackgroundColor="{StaticResource SubMenuBGColor}">
+
+                        <Button Text="O grze" 
+                                Clicked="OnAboutGameClicked"
+                                BackgroundColor="{StaticResource SubMenuBGColor}"
+                                TextColor="White"
+                                HeightRequest="50"
+                                CornerRadius="8"
+                                BorderColor="{StaticResource AccentColor}" 
+                                BorderWidth="1"
+                                HorizontalOptions="Fill"/>
+
+                        <Button Text="Twórcy" 
+                                Clicked="OnCreatorsClicked"
+                                BackgroundColor="{StaticResource SubMenuBGColor}"
+                                TextColor="White"
+                                HeightRequest="50"
+                                CornerRadius="8"
+                                BorderColor="{StaticResource AccentColor}" 
+                                BorderWidth="1"
+                                HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </Grid>
+
+
+</ContentPage>

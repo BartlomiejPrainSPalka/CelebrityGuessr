@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:CelebrityGuessr.Models"
+             x:Class="CelebrityGuessr.NormalMode"
+             Title="Tryb Podstawowy"
+             BackgroundColor="#1e1e2e"
+             Shell.NavBarIsVisible="True"
+             Shell.ForegroundColor="White"
+             Shell.BackgroundColor="#1e1e2e">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="5">
+
+        <Grid Grid.Row="0" ColumnDefinitions="2*,*,*,*,*" Padding="0,10">
+            <Label Grid.Column="0" Text="Celebryta" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+            <Label Grid.Column="1" Text="Płeć" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+            <Label Grid.Column="2" Text="Kraj" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+            <Label Grid.Column="3" Text="Zawód" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+            <Label Grid.Column="4" Text="Rok" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+        </Grid>
+
+        <CollectionView Grid.Row="1" x:Name="GuessesList" Margin="0,10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:GuessResult">
+                    <Grid ColumnDefinitions="2*,*,*,*,*" Padding="0,4">
+
+                        <Border Grid.Column="0" BackgroundColor="{Binding NameColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
+                            <Label Text="{Binding GuessData.Name}" TextColor="White" FontSize="10" 
+                                   HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                        </Border>
+
+                        <Border Grid.Column="1" BackgroundColor="{Binding GenderColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
+                            <Label Text="{Binding GuessData.Gender}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                        </Border>
+
+                        <Border Grid.Column="2" BackgroundColor="{Binding NationalityColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
+                            <Label Text="{Binding GuessData.Nationality}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                        </Border>
+
+                        <Border Grid.Column="3" BackgroundColor="{Binding ProfessionColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
+                            <Label Text="{Binding GuessData.Profession}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                        </Border>
+
+                        <Border Grid.Column="4" BackgroundColor="{Binding YearColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
+                            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="2">
+                                <Label Text="{Binding GuessData.BirthYear}" FontSize="10" TextColor="White"/>
+                                <Label Text="{Binding YearArrow}" FontSize="10" TextColor="White" FontAttributes="Bold"/>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <VerticalStackLayout Grid.Row="2" Spacing="5" VerticalOptions="End">
+
+            <CollectionView x:Name="SuggestionsList" 
+                            HeightRequest="150" 
+                            IsVisible="False" 
+                            BackgroundColor="#2b2b3b"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Celebrity">
+                        <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="10">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSuggestionTapped" CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+
+                            <Label Text="{Binding Name}" TextColor="White" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Entry x:Name="SearchEntry" 
+                   Placeholder="Wpisz nazwisko..." 
+                   TextColor="White"
+                   PlaceholderColor="Gray"
+                   BackgroundColor="#2b2b3b"
+                   TextChanged="OnSearchTextChanged"/>
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>
