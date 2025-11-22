@@ -6,8 +6,6 @@ namespace CelebrityGuessr.Services
     {
         private List<Celebrity> _allCelebrities;
 
-        // POPRAWKA 1: Dopisujemy "= null!;"
-        // To "ucisza" kompilator. Mówimy mu: "Wiem co robię, ta zmienna zostanie zaraz ustawiona w metodzie StartNewGame".
         private Celebrity _targetCelebrity = null!;
 
         public GameService()
@@ -25,7 +23,6 @@ namespace CelebrityGuessr.Services
         public void StartNewGame()
         {
             var random = new Random();
-            // Tutaj przypisujemy wartość, więc nasza obietnica (null!) jest spełniona
             _targetCelebrity = _allCelebrities[random.Next(_allCelebrities.Count)];
         }
 
@@ -34,8 +31,6 @@ namespace CelebrityGuessr.Services
             if (string.IsNullOrWhiteSpace(query))
                 return new List<Celebrity>();
 
-            // POPRAWKA 2: Dodajemy "!string.IsNullOrEmpty(c.Name)"
-            // Dzięki temu najpierw sprawdzamy, czy imię istnieje, zanim spróbujemy je zamienić na małe litery.
             return _allCelebrities
                 .Where(c => !string.IsNullOrEmpty(c.Name) && c.Name.ToLower().Contains(query.ToLower()))
                 .ToList();
@@ -45,7 +40,6 @@ namespace CelebrityGuessr.Services
         {
             var result = new GuessResult { GuessData = guessedCeleb };
 
-            // Tutaj bezpiecznie porównujemy (operator == radzi sobie z nullami)
             result.NameColor = guessedCeleb.Name == _targetCelebrity.Name ? "Green" : "Red";
             result.GenderColor = guessedCeleb.Gender == _targetCelebrity.Gender ? "Green" : "Red";
             result.NationalityColor = guessedCeleb.Nationality == _targetCelebrity.Nationality ? "Green" : "Red";
