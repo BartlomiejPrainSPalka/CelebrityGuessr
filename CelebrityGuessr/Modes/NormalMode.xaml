@@ -11,34 +11,41 @@
 
     <Grid RowDefinitions="Auto, *, Auto" Padding="5">
 
-        <Grid Grid.Row="0" ColumnDefinitions="2*,*,*,*,*" Padding="0,10">
-            <Label Grid.Column="0" Text="Celebryta" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-            <Label Grid.Column="1" Text="Płeć" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-            <Label Grid.Column="2" Text="Kraj" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-            <Label Grid.Column="3" Text="Zawód" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-            <Label Grid.Column="4" Text="Rok" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-        </Grid>
+        <Border Stroke="White" BackgroundColor="Transparent" Padding="10">
+            <Grid Grid.Row="0" ColumnDefinitions="2*,1.5*,*,1.5*,*" Padding="0,4">
+                <Label Grid.Column="0" Text="Celebryta" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="Płeć" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="2" Text="Kraj" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="3" Text="Zawód" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="4" Text="Rok" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+            </Grid>
+        </Border>
 
         <CollectionView Grid.Row="1" x:Name="GuessesList" Margin="0,10">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:GuessResult">
-                    <Grid ColumnDefinitions="2*,*,*,*,*" Padding="0,4">
+
+                    <Grid ColumnDefinitions="2*,1.5*,*,1.5*,*" Padding="0,4" HeightRequest="50">
 
                         <Border Grid.Column="0" BackgroundColor="{Binding NameColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
                             <Label Text="{Binding GuessData.Name}" TextColor="White" FontSize="10" 
-                                   HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                   HorizontalOptions="Center" VerticalOptions="Center" 
+                                   LineBreakMode="MiddleTruncation"/>
                         </Border>
 
                         <Border Grid.Column="1" BackgroundColor="{Binding GenderColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <Label Text="{Binding GuessData.Gender}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                            <Label Text="{Binding GuessData.Gender}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" 
+                                   LineBreakMode="MiddleTruncation"/>
                         </Border>
 
                         <Border Grid.Column="2" BackgroundColor="{Binding NationalityColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <Label Text="{Binding GuessData.Nationality}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                            <Label Text="{Binding GuessData.Nationality}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" 
+                                   LineBreakMode="MiddleTruncation"/>
                         </Border>
 
                         <Border Grid.Column="3" BackgroundColor="{Binding ProfessionColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <Label Text="{Binding GuessData.Profession}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                            <Label Text="{Binding GuessData.Profession}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" 
+                                   LineBreakMode="MiddleTruncation"/>
                         </Border>
 
                         <Border Grid.Column="4" BackgroundColor="{Binding YearColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
