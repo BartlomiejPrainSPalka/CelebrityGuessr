@@ -7,6 +7,11 @@ namespace CelebrityGuessr.Services
     {
         private List<Celebrity> _allCelebrities = new();
         private Celebrity _targetCelebrity = null!;
+        public Celebrity TargetCelebrity
+        {
+            get { return _targetCelebrity; }
+            set { _targetCelebrity = value; }
+        }
 
         // Nazwa pliku w Resources/Raw
         private const string DbName = "celebrities.db";
@@ -52,7 +57,7 @@ namespace CelebrityGuessr.Services
             if (_allCelebrities.Count == 0) return;
 
             var random = new Random();
-            _targetCelebrity = _allCelebrities[random.Next(_allCelebrities.Count)];
+            TargetCelebrity = _allCelebrities[random.Next(_allCelebrities.Count)];
         }
 
         public List<Celebrity> SearchCelebrities(string query)

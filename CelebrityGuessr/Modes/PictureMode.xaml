@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:CelebrityGuessr.Models"
+             xmlns:services="clr-namespace:CelebrityGuessr.Services"
              x:Class="CelebrityGuessr.Modes.PictureMode"
-             Title="PictureMode">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Trym Zdjęcia"
+             BackgroundColor="#1e1e2e"
+             Shell.NavBarIsVisible="True"
+             Shell.ForegroundColor="White"
+             Shell.BackgroundColor="#1e1e2e"
+             Shell.TitleColor="White">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="5">
+        <Image Grid.Row="0" HeightRequest="200" WidthRequest="200" BackgroundColor="White"  Source="{Binding TargetCelebrity.ImageUrl}"></Image>
+        
+        <CollectionView Grid.Row="1" x:Name="GuessesList" Margin="0,10">
+            <CollectionView.ItemTemplate x:DataType="models:GuessResult">
+                <DataTemplate>
+                    
+                    <Grid ColumnDefinitions="*" Padding="5" HeightRequest="50" WidthRequest="200" HorizontalOptions="Center">
+                        <Border Grid.Column="0" BackgroundColor="{Binding NameColor}" StrokeShape="RoundRectangle 5" >
+                            <Label Text="{Binding GuessData.Name}" TextColor="White" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="MiddleTruncation" />
+                        </Border>    
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <VerticalStackLayout Grid.Row="2" Spacing="5" VerticalOptions="End">
+
+            <CollectionView x:Name="SuggestionsList" 
+                HeightRequest="150" 
+                IsVisible="False" 
+                BackgroundColor="#2b2b3b"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Celebrity">
+                        <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="10">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSuggestionTapped" CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+
+                            <Label Text="{Binding Name}" TextColor="White" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Entry x:Name="SearchEntry" 
+                Placeholder="Wpisz nazwisko..." 
+                TextColor="White"
+                PlaceholderColor="Gray"
+                BackgroundColor="#2b2b3b"
+                TextChanged="OnSearchTextChanged"/>
+        </VerticalStackLayout>
+    </Grid>
+    
 </ContentPage>
