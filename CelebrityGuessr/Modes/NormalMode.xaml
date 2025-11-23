@@ -7,17 +7,18 @@
              BackgroundColor="#1e1e2e"
              Shell.NavBarIsVisible="True"
              Shell.ForegroundColor="White"
-             Shell.BackgroundColor="#1e1e2e">
+             Shell.BackgroundColor="#1e1e2e"
+             Shell.TitleColor="White">
 
     <Grid RowDefinitions="Auto, *, Auto" Padding="5">
 
         <Border Stroke="White" BackgroundColor="Transparent" Padding="10">
             <Grid Grid.Row="0" ColumnDefinitions="2*,1.5*,*,1.5*,*" Padding="0,4">
-                <Label Grid.Column="0" Text="Celebryta" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="1" Text="Płeć" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="2" Text="Kraj" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="3" Text="Zawód" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="4" Text="Rok" TextColor="Gray" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="0" Text="Celebryta" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="Płeć" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="2" Text="Kraj" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="3" Text="Zawód" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="4" Text="Rok" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
             </Grid>
         </Border>
 

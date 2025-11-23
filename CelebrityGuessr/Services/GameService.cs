@@ -1,27 +1,56 @@
 ﻿using CelebrityGuessr.Models;
+using SQLite; // Potrzebne do obsługi bazy
 
 namespace CelebrityGuessr.Services
 {
     public class GameService
     {
-        private List<Celebrity> _allCelebrities;
-
+        private List<Celebrity> _allCelebrities = new();
         private Celebrity _targetCelebrity = null!;
+
+        // Nazwa pliku w Resources/Raw
+        private const string DbName = "celebrities.db";
+        private SQLiteConnection? _db;
 
         public GameService()
         {
-            _allCelebrities = new List<Celebrity>
+            // Konstruktor nie może być async, więc inicjalizację wywołujemy osobno
+            // lub blokujemy wątek (mniej zalecane, ale tu dla uproszczenia wewnątrz Init)
+            InitializeDatabase();
+        }
+
+        private void InitializeDatabase()
+        {
+            // Ścieżka docelowa na urządzeniu (Android/iOS/Windows)
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, DbName);
+
+            // 1. Jeśli bazy nie ma na urządzeniu, kopiujemy ją z Resources/Raw
+            if (!File.Exists(dbPath))
             {
-                new Celebrity { Name = "Robert Lewandowski", Gender = "Mężczyzna", Nationality = "Polska", Profession = "Sportowiec", BirthYear = 1988 },
-                new Celebrity { Name = "Iga Świątek", Gender = "Kobieta", Nationality = "Polska", Profession = "Sportowiec", BirthYear = 2001 },
-                new Celebrity { Name = "Brad Pitt", Gender = "Mężczyzna", Nationality = "USA", Profession = "Aktor", BirthYear = 1963 },
-            };
+                // Ponieważ OpenAppPackageFileAsync jest asynchroniczne, musimy poczekać
+                // W prawdziwej aplikacji lepiej zrobić metodę InitAsync() wywoływaną z UI
+                Task.Run(async () =>
+                {
+                    using var stream = await FileSystem.OpenAppPackageFileAsync(DbName);
+                    using var newStream = File.Create(dbPath);
+                    await stream.CopyToAsync(newStream);
+                }).Wait();
+            }
+
+            // 2. Łączymy się z bazą
+            _db = new SQLiteConnection(dbPath);
+
+            // 3. Pobieramy wszystkich celebrytów do listy (zamiast hardcode'owania)
+            // Dzięki atrybutom [Column] w modelu, SQLite wie jak czytać polskie kolumny
+            _allCelebrities = _db.Table<Celebrity>().ToList();
 
             StartNewGame();
         }
 
         public void StartNewGame()
         {
+            if (_allCelebrities.Count == 0) return;
+
             var random = new Random();
             _targetCelebrity = _allCelebrities[random.Next(_allCelebrities.Count)];
         }
@@ -32,7 +61,8 @@ namespace CelebrityGuessr.Services
                 return new List<Celebrity>();
 
             return _allCelebrities
-                .Where(c => !string.IsNullOrEmpty(c.Name) && c.Name.ToLower().Contains(query.ToLower()))
+                .Where(c => !string.IsNullOrEmpty(c.Name) &&
+                            c.Name.ToLower().Contains(query.ToLower()))
                 .ToList();
         }
 
@@ -40,10 +70,18 @@ namespace CelebrityGuessr.Services
         {
             var result = new GuessResult { GuessData = guessedCeleb };
 
-            result.NameColor = guessedCeleb.Name == _targetCelebrity.Name ? "Green" : "Red";
-            result.GenderColor = guessedCeleb.Gender == _targetCelebrity.Gender ? "Green" : "Red";
-            result.NationalityColor = guessedCeleb.Nationality == _targetCelebrity.Nationality ? "Green" : "Red";
-            result.ProfessionColor = guessedCeleb.Profession == _targetCelebrity.Profession ? "Green" : "Red";
+            // Logika porównywania (bez zmian)
+            // Uwaga: Baza SQL ma małe litery w płci (np. 'kobieta'), 
+            // upewnij się, że porównujesz case-insensitive lub znormalizuj dane.
+
+            result.NameColor = string.Equals(guessedCeleb.Name, _targetCelebrity.Name, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
+
+            // Przykład normalizacji porównania dla stringów
+            result.GenderColor = string.Equals(guessedCeleb.Gender, _targetCelebrity.Gender, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
+
+            result.NationalityColor = string.Equals(guessedCeleb.Nationality, _targetCelebrity.Nationality, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
+
+            result.ProfessionColor = string.Equals(guessedCeleb.Profession, _targetCelebrity.Profession, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
 
             if (guessedCeleb.BirthYear == _targetCelebrity.BirthYear)
             {
