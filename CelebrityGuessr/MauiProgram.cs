@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CelebrityGuessr.Services;
+using CelebrityGuessr.Modes;
 
 namespace CelebrityGuessr
 {
@@ -15,9 +16,10 @@ namespace CelebrityGuessr
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-#if DEBUG
-    		builder.Logging.AddDebug();
-#endif
+            builder.Services.AddSingleton<GameService>();
+
+            builder.Services.AddTransient<NormalMode>();
+            builder.Services.AddTransient<PictureMode>();
 
             return builder.Build();
         }

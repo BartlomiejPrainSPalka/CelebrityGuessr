@@ -81,7 +81,6 @@ namespace CelebrityGuessr
 
         private async void OnNormalClicked(object sender, EventArgs e)
         {
-            var normal = new NormalMode();
             if (sender is Button button)
             {
                 // Wyróżnij wybrany przycisk na chwilę
@@ -89,22 +88,20 @@ namespace CelebrityGuessr
                 await button.ScaleTo(1.05, 50);
                 await button.ScaleTo(1.0, 50);
                 button.BackgroundColor = Color.FromArgb("#1c1c1c");
-                await Navigation.PushAsync(normal);
+                await Shell.Current.GoToAsync(nameof(NormalMode));
             }
         }
 
 
         private async void OnPictureClicked(object sender, EventArgs e)
         {
-            var picture = new PictureMode();
             if (sender is Button button)
             {
-                // Wyróżnij wybrany przycisk na chwilę
                 button.BackgroundColor = Color.FromArgb("#FFC107");
                 await button.ScaleTo(1.05, 50);
                 await button.ScaleTo(1.0, 50);
                 button.BackgroundColor = Color.FromArgb("#1c1c1c");
-                await Navigation.PushAsync(picture);
+                await Shell.Current.GoToAsync(nameof(PictureMode));
             }
         }
 
@@ -113,7 +110,6 @@ namespace CelebrityGuessr
             var aboutGame = new AboutGame();
             if (sender is Button button)
             {
-                // Wyróżnij wybrany przycisk na chwilę
                 button.BackgroundColor = Color.FromArgb("#FFC107");
                 await button.ScaleTo(1.05, 50);
                 await button.ScaleTo(1.0, 50);

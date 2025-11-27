@@ -1,30 +1,31 @@
-﻿using CelebrityGuessr.Models;
-using SQLite; // Potrzebne do obsługi bazy
+﻿// W pliku Services/GameService.cs
+
+using CelebrityGuessr.Models;
+using SQLite;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Maui.Storage;
 
 namespace CelebrityGuessr.Services
 {
     public class GameService
     {
-        private List<Celebrity> _allCelebrities = new();
-        private Celebrity _targetCelebrity = null!;
-        public Celebrity TargetCelebrity
-        {
-            get { return _targetCelebrity; }
-            set { _targetCelebrity = value; }
-        }
-
-        // Nazwa pliku w Resources/Raw
+        private List<Celebrity> _allCelebrities = new List<Celebrity>();
+        private Celebrity? _targetCelebrity = null!;
+        
+        private SQLiteAsyncConnection? _db;
         private const string DbName = "celebrities.db";
-        private SQLiteConnection? _db;
 
+        // Konstruktor jest pusty, aby móc być zarejestrowanym w DI
         public GameService()
         {
-            // Konstruktor nie może być async, więc inicjalizację wywołujemy osobno
-            // lub blokujemy wątek (mniej zalecane, ale tu dla uproszczenia wewnątrz Init)
             InitializeDatabase();
         }
 
-        private void InitializeDatabase()
+        // --- INICJALIZACJA BAZY DANYCH (ASYNC) ---
+        public Task InitializeDatabase()
         {
             // Ścieżka docelowa na urządzeniu (Android/iOS/Windows)
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, DbName);
@@ -43,52 +44,57 @@ namespace CelebrityGuessr.Services
             }
 
             // 2. Łączymy się z bazą
-            _db = new SQLiteConnection(dbPath);
+            _db = new SQLiteAsyncConnection(dbPath);
 
             // 3. Pobieramy wszystkich celebrytów do listy (zamiast hardcode'owania)
             // Dzięki atrybutom [Column] w modelu, SQLite wie jak czytać polskie kolumny
-            _allCelebrities = _db.Table<Celebrity>().ToList();
+            _allCelebrities = _db.Table<Celebrity>().ToListAsync().Result;
 
             StartNewGame();
+            return Task.CompletedTask;
         }
 
+        // --- POBIERANIE CELU (Dla PictureMode) ---
+        public Celebrity? GetTargetCelebrity()
+        {
+            return _targetCelebrity;
+        }
+
+        // --- ROZPOCZĘCIE NOWEJ GRY ---
         public void StartNewGame()
         {
-            if (_allCelebrities.Count == 0) return;
-
-            var random = new Random();
-            TargetCelebrity = _allCelebrities[random.Next(_allCelebrities.Count)];
+            if (_allCelebrities.Count > 0)
+            {
+                var random = new Random();
+                _targetCelebrity = _allCelebrities[random.Next(_allCelebrities.Count)];
+            }
         }
 
+        // --- WYSZUKIWANIE CELEBRYTÓW ---
         public List<Celebrity> SearchCelebrities(string query)
         {
             if (string.IsNullOrWhiteSpace(query))
                 return new List<Celebrity>();
 
             return _allCelebrities
-                .Where(c => !string.IsNullOrEmpty(c.Name) &&
-                            c.Name.ToLower().Contains(query.ToLower()))
+                .Where(c => !string.IsNullOrEmpty(c.Name) && c.Name.ToLower().Contains(query.ToLower()))
                 .ToList();
         }
 
+        // --- SPRAWDZANIE ZGADNIĘCIA ---
         public GuessResult CheckGuess(Celebrity guessedCeleb)
         {
+            var target = _targetCelebrity!; // Używamy '!', bo ufamy, że cel jest ustawiony
+
             var result = new GuessResult { GuessData = guessedCeleb };
 
-            // Logika porównywania (bez zmian)
-            // Uwaga: Baza SQL ma małe litery w płci (np. 'kobieta'), 
-            // upewnij się, że porównujesz case-insensitive lub znormalizuj dane.
+            // Porównania stringów bez rozróżniania wielkości liter
+            result.NameColor = string.Equals(guessedCeleb.Name, target.Name, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
+            result.GenderColor = string.Equals(guessedCeleb.Gender, target.Gender, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
+            result.NationalityColor = string.Equals(guessedCeleb.Nationality, target.Nationality, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
+            result.ProfessionColor = string.Equals(guessedCeleb.Profession, target.Profession, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
 
-            result.NameColor = string.Equals(guessedCeleb.Name, _targetCelebrity.Name, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
-
-            // Przykład normalizacji porównania dla stringów
-            result.GenderColor = string.Equals(guessedCeleb.Gender, _targetCelebrity.Gender, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
-
-            result.NationalityColor = string.Equals(guessedCeleb.Nationality, _targetCelebrity.Nationality, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
-
-            result.ProfessionColor = string.Equals(guessedCeleb.Profession, _targetCelebrity.Profession, StringComparison.OrdinalIgnoreCase) ? "Green" : "Red";
-
-            if (guessedCeleb.BirthYear == _targetCelebrity.BirthYear)
+            if (guessedCeleb.BirthYear == target.BirthYear)
             {
                 result.YearColor = "Green";
                 result.YearArrow = "";
@@ -96,7 +102,7 @@ namespace CelebrityGuessr.Services
             else
             {
                 result.YearColor = "Red";
-                result.YearArrow = guessedCeleb.BirthYear < _targetCelebrity.BirthYear ? "↑" : "↓";
+                result.YearArrow = guessedCeleb.BirthYear < target.BirthYear ? "↑" : "↓";
             }
 
             return result;

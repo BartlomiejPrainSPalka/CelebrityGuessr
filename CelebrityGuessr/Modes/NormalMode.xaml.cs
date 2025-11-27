@@ -1,21 +1,22 @@
 using CelebrityGuessr.Models;
 using CelebrityGuessr.Services;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CelebrityGuessr
+namespace CelebrityGuessr.Modes
 {
     public partial class NormalMode : ContentPage
     {
         private readonly GameService _gameService;
         private ObservableCollection<GuessResult> _guesses;
 
-        public NormalMode()
+        public NormalMode(GameService gameService)
         {
             InitializeComponent();
 
-            _gameService = new GameService();
+            _gameService = gameService;
             _guesses = new ObservableCollection<GuessResult>();
-
             GuessesList.ItemsSource = _guesses;
 
             Shell.SetBackButtonBehavior(this, new BackButtonBehavior
@@ -24,10 +25,17 @@ namespace CelebrityGuessr
             });
         }
 
+        protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+        {
+            base.OnNavigatedTo(args);
+
+            await _gameService.InitializeDatabase();
+            _gameService.StartNewGame();
+        }
+
         protected override bool OnBackButtonPressed()
         {
             Dispatcher.Dispatch(async () => await ConfirmExit());
-
             return true;
         }
 
@@ -51,7 +59,7 @@ namespace CelebrityGuessr
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                SuggestionsList.IsVisible = false;
+                SuggestionsList.HeightRequest = 0;
                 return;
             }
 
@@ -60,11 +68,11 @@ namespace CelebrityGuessr
             if (matches.Any())
             {
                 SuggestionsList.ItemsSource = matches;
-                SuggestionsList.IsVisible = true;
+                SuggestionsList.HeightRequest = 100;
             }
             else
             {
-                SuggestionsList.IsVisible = false;
+                SuggestionsList.HeightRequest = 0;
             }
         }
 
