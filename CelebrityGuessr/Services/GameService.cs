@@ -1,6 +1,4 @@
-﻿// W pliku Services/GameService.cs
-
-using CelebrityGuessr.Models;
+﻿using CelebrityGuessr.Models;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -57,7 +55,7 @@ namespace CelebrityGuessr.Services
         // --- POBIERANIE CELU (Dla PictureMode) ---
         public Celebrity GetTargetCelebrity()
         {
-            return _targetCelebrity;
+            return _targetCelebrity ?? new Celebrity();
         }
 
         public string GetTargetCelebrityImageUrl()

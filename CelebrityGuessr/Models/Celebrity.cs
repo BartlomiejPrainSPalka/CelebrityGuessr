@@ -2,7 +2,7 @@
 
 namespace CelebrityGuessr.Models
 {
-    [Table("celebryci")]
+    [Table("celebrities")]
     public class Celebrity
     {
         [PrimaryKey, Column("id")]

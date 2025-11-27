@@ -12,7 +12,6 @@ namespace CelebrityGuessr
         public MainPage()
         {
             InitializeComponent();
-            //ustawienia 1 menu przycisków
             SubButtonsContainer.HeightRequest = 0;
             SubButtonsContainer.IsVisible = true;
             MainButtonIcon.Rotation = 0; // Początkowa pozycja ikony (strzałka w prawo)

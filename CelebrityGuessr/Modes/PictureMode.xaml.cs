@@ -10,16 +10,17 @@ namespace CelebrityGuessr.Modes
     {
         private readonly GameService _gameService;
         private ObservableCollection<GuessResult> _guesses;
+        private const double SingleSuggestionHeight = 45;
+        private const int MaxSuggestionsToShow = 5;
 
         public PictureMode(GameService gameService)
         {
             InitializeComponent();
 
-            ClueImage.Source = _gameService.GetTargetCelebrityImageUrl();
-
             _gameService = gameService;
             _guesses = new ObservableCollection<GuessResult>();
             GuessesList.ItemsSource = _guesses;
+
             
 
             Shell.SetBackButtonBehavior(this, new BackButtonBehavior
@@ -54,7 +55,9 @@ namespace CelebrityGuessr.Modes
 
             if (string.IsNullOrWhiteSpace(text))
             {
+                SuggestionsList.IsVisible = false;
                 SuggestionsList.HeightRequest = 0;
+                SuggestionsList.ItemsSource = null;
                 return;
             }
 
@@ -63,12 +66,13 @@ namespace CelebrityGuessr.Modes
             if (matches.Any())
             {
                 SuggestionsList.ItemsSource = matches;
-                SuggestionsList.HeightRequest = 100;
+                SuggestionsList.IsVisible = true;
+                SuggestionsList.HeightRequest = 150;
             }
             else
             {
+                SuggestionsList.IsVisible = false;
                 SuggestionsList.HeightRequest = 0;
-                SuggestionsList.ItemsSource = null;
             }
         }
 
@@ -88,7 +92,7 @@ namespace CelebrityGuessr.Modes
 
             if (result.NameColor == "Green")
             {
-                ShowFullImage(selectedCeleb.ImageUrl);
+                ShowFullImage(selectedCeleb.ImageUrl ?? "not avaible");
 
                 await DisplayAlert("Gratulacje!", $"Zgad³eœ! To {selectedCeleb.Name}", "OK");
 

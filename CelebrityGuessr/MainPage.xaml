@@ -6,13 +6,12 @@
              IconImageSource="cblogo.png"
              NavigationPage.HasNavigationBar="False">
 
-
     <ContentPage.Resources>
         <Color x:Key="MenuBGColor">#1a1a1a</Color>
         <Color x:Key="SubMenuBGColor">#1c1c1c</Color>
         <Color x:Key="AccentColor">#FFC107</Color>
     </ContentPage.Resources>
-    <Grid RowDefinitions="auto,auto,auto" ColumnDefinitions="*, auto, *" HorizontalOptions="Center">
+    <Grid RowDefinitions="auto,auto,auto,auto" ColumnDefinitions="*, auto, *" HorizontalOptions="Center">
         <Image Source="cblogo.png"
                Grid.Row="0"
                Grid.Column="1"

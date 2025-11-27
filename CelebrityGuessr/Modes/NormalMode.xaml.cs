@@ -62,6 +62,7 @@ namespace CelebrityGuessr.Modes
 
             if (string.IsNullOrWhiteSpace(text))
             {
+                SuggestionsList.IsVisible = false;
                 SuggestionsList.HeightRequest = 0;
                 SuggestionsList.ItemsSource = null;
                 return;
@@ -71,16 +72,14 @@ namespace CelebrityGuessr.Modes
 
             if (matches.Any())
             {
-                SuggestionsList.ItemsSource = matches; 
-                int displayCount = Math.Min(matches.Count, MaxSuggestionsToShow);
-                double desiredHeight = displayCount * SingleSuggestionHeight;
-
-                SuggestionsList.HeightRequest = desiredHeight;
+                SuggestionsList.ItemsSource = matches;
+                SuggestionsList.IsVisible = true;
+                SuggestionsList.HeightRequest = 150;
             }
             else
             {
+                SuggestionsList.IsVisible = false;
                 SuggestionsList.HeightRequest = 0;
-                SuggestionsList.ItemsSource = null;
             }
         }
 
