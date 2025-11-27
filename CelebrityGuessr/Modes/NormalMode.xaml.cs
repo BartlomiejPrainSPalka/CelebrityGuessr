@@ -10,6 +10,8 @@ namespace CelebrityGuessr.Modes
     {
         private readonly GameService _gameService;
         private ObservableCollection<GuessResult> _guesses;
+        private const double SingleSuggestionHeight = 45;
+        private const int MaxSuggestionsToShow = 5;
 
         public NormalMode(GameService gameService)
         {
@@ -18,6 +20,7 @@ namespace CelebrityGuessr.Modes
             _gameService = gameService;
             _guesses = new ObservableCollection<GuessResult>();
             GuessesList.ItemsSource = _guesses;
+            
 
             Shell.SetBackButtonBehavior(this, new BackButtonBehavior
             {
@@ -60,6 +63,7 @@ namespace CelebrityGuessr.Modes
             if (string.IsNullOrWhiteSpace(text))
             {
                 SuggestionsList.HeightRequest = 0;
+                SuggestionsList.ItemsSource = null;
                 return;
             }
 
@@ -67,12 +71,16 @@ namespace CelebrityGuessr.Modes
 
             if (matches.Any())
             {
-                SuggestionsList.ItemsSource = matches;
-                SuggestionsList.HeightRequest = 100;
+                SuggestionsList.ItemsSource = matches; 
+                int displayCount = Math.Min(matches.Count, MaxSuggestionsToShow);
+                double desiredHeight = displayCount * SingleSuggestionHeight;
+
+                SuggestionsList.HeightRequest = desiredHeight;
             }
             else
             {
                 SuggestionsList.HeightRequest = 0;
+                SuggestionsList.ItemsSource = null;
             }
         }
 

@@ -15,9 +15,12 @@ namespace CelebrityGuessr.Modes
         {
             InitializeComponent();
 
+            ClueImage.Source = _gameService.GetTargetCelebrityImageUrl();
+
             _gameService = gameService;
             _guesses = new ObservableCollection<GuessResult>();
             GuessesList.ItemsSource = _guesses;
+            
 
             Shell.SetBackButtonBehavior(this, new BackButtonBehavior
             {
@@ -65,6 +68,7 @@ namespace CelebrityGuessr.Modes
             else
             {
                 SuggestionsList.HeightRequest = 0;
+                SuggestionsList.ItemsSource = null;
             }
         }
 

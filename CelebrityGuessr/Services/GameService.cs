@@ -55,9 +55,14 @@ namespace CelebrityGuessr.Services
         }
 
         // --- POBIERANIE CELU (Dla PictureMode) ---
-        public Celebrity? GetTargetCelebrity()
+        public Celebrity GetTargetCelebrity()
         {
             return _targetCelebrity;
+        }
+
+        public string GetTargetCelebrityImageUrl()
+        {
+            return _targetCelebrity.ImageUrl ?? "Unknown";
         }
 
         // --- ROZPOCZĘCIE NOWEJ GRY ---
