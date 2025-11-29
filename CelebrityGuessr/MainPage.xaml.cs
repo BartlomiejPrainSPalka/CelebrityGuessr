@@ -6,20 +6,20 @@ namespace CelebrityGuessr
     {
         private bool _isExpanded1 = false;
         private bool _isExpanded2 = false;
-        private const uint AnimationDuration = 300; // Szybkość animacji
-        private const double ExpandedHeight = 101;  // Całkowita wysokość kontenera rozłożonego
+        private const uint AnimationDuration = 300;
+        private const double ExpandedHeight = 101;
 
         public MainPage()
         {
             InitializeComponent();
             SubButtonsContainer.HeightRequest = 0;
             SubButtonsContainer.IsVisible = true;
-            MainButtonIcon.Rotation = 0; // Początkowa pozycja ikony (strzałka w prawo)
+            MainButtonIcon.Rotation = 0;
 
             //ustawienia 2 menu przycisków
             SubButtonsContainer2.HeightRequest = 0;
             SubButtonsContainer2.IsVisible = true;
-            MainButtonIcon2.Rotation = 0; // Początkowa pozycja ikony2 (strzałka w prawo)
+            MainButtonIcon2.Rotation = 0;
         }
 
         private void OnMainButtonClicked(object sender, EventArgs e)
@@ -28,28 +28,22 @@ namespace CelebrityGuessr
 
             if (_isExpanded1)
             {
-                //Strzałka przesówa się w dół
                 MainButtonIcon.RotateTo(90, AnimationDuration, Easing.SinOut);
 
 
-                // Rozszerzenie
                 var expandAnimation = new Animation(v => SubButtonsContainer.HeightRequest = v, 0, ExpandedHeight, Easing.CubicOut);
 
                 expandAnimation.Commit(this, "ExpandMenu", length: AnimationDuration);
             }
             else
             {
-                // Strzałka w bok
                 MainButtonIcon.RotateTo(0, AnimationDuration, Easing.SinIn);
 
-                // Kurczenie
                 var collapseAnimation = new Animation(v => SubButtonsContainer.HeightRequest = v, ExpandedHeight, 0, Easing.CubicIn);
 
-                // Po zakończeniu animacji, możesz dodać akcję
                 collapseAnimation.Commit(this, "CollapseMenu", length: AnimationDuration, finished: (v, b) =>
                 {
-                    // Opcjonalnie: Po zakończeniu zwijania, możesz ustawić IsVisible na False, 
-                    // ale HeightRequest = 0 już skutecznie ukrywa elementy.
+                    
                 });
             }
         }
@@ -82,7 +76,6 @@ namespace CelebrityGuessr
         {
             if (sender is Button button)
             {
-                // Wyróżnij wybrany przycisk na chwilę
                 button.BackgroundColor = Color.FromArgb("#FFC107");
                 await button.ScaleTo(1.05, 50);
                 await button.ScaleTo(1.0, 50);
@@ -122,7 +115,6 @@ namespace CelebrityGuessr
             var creators = new Creators();
             if (sender is Button button)
             {
-                // Wyróżnij wybrany przycisk na chwilę
                 button.BackgroundColor = Color.FromArgb("#FFC107");
                 await button.ScaleTo(1.05, 50);
                 await button.ScaleTo(1.0, 50);
