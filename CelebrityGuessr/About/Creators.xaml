@@ -2,11 +2,39 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CelebrityGuessr.About.Creators"
-             Title="Creators">
+             Title="Twórcy"
+             BackgroundColor="#070b1a">
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to .NET MAUI!"
+            Text="Aplikacja była współtworzona przez:"
             VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center" 
+            TextColor="White"
+            Margin="2"/>
+        <Label
+            Text="Huberta Siedlarza"
+            TextColor="White"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            Margin="2"/>
+        <Label
+            Text="I"
+            TextColor="White"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            Margin="2"/>
+        <Label
+            Text="Bartłomieja Pałkę"
+            TextColor="White"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            Margin="2"/>
+
+        <Label
+            Text="i ChatGPT (tak z 30%)"
+            TextColor="#121936"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" 
+            Margin="2"/>
     </VerticalStackLayout>
 </ContentPage>
