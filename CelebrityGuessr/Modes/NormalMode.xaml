@@ -6,19 +6,60 @@
              Title="Tryb Klasyczny"
              BackgroundColor="#070b1a">
 
-    <Grid RowDefinitions="Auto, *, Auto" Padding="5">
+    <Grid RowDefinitions="Auto, Auto, Auto, *" Padding="5">
 
-        <Border Grid.Row="0" Stroke="White" BackgroundColor="Transparent" Padding="10" Margin="0, 5, 0, 0" StrokeShape="RoundRectangle 15">
-            <Grid ColumnDefinitions="2*,1.5*,*,1.5*,*" Padding="0,4">
-                <Label Grid.Column="0" Text="Celebryta" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="1" Text="Płeć" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="2" Text="Kraj" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="3" Text="Zawód" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="4" Text="Rok" TextColor="White" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+        <VerticalStackLayout Grid.Row="0" Margin="10">
+            <Border StrokeShape="RoundRectangle 10" HeightRequest="50">
+                <Label Text="Zgadnij wylosowanego celebryte!"
+                       TextColor="White"
+                       BackgroundColor="#252b3d"
+                       VerticalTextAlignment="Center"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="5" VerticalOptions="End">
+            <Border StrokeShape="RoundRectangle 10" Stroke="White" StrokeThickness="2">
+                <Entry x:Name="SearchEntry" 
+                   Placeholder="Wpisz nazwisko..." 
+                   TextColor="White"
+                   PlaceholderColor="Gray"
+                   BackgroundColor="#252b3d"
+                   TextChanged="OnSearchTextChanged"/>
+            </Border>
+        </VerticalStackLayout>
+        <VerticalStackLayout ZIndex="10" Grid.Row="2" Grid.RowSpan="2">
+            <Border StrokeShape="RoundRectangle 10"
+                    Stroke="Transparent">
+                <CollectionView x:Name="SuggestionsList"
+                            HeightRequest="0"
+                            IsVisible="False"
+                            BackgroundColor="#252b3d"
+                            SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Celebrity">
+                            <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="10">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSuggestionTapped" CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding Name}" TextColor="White" />
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+        </VerticalStackLayout>
+        <Border Grid.Row="2" Stroke="#FFC107" BackgroundColor="Transparent" Padding="10" Margin="0, 10, 0, 0" StrokeShape="RoundRectangle 15">
+            <Grid ColumnDefinitions="2*,1.5*,1.3*,1.9*,*" Padding="0,4">
+                <Label Grid.Column="0" Text="Celebryta" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="Płeć" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="2" Text="Kraj" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="3" Text="Zawód" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
+                <Label Grid.Column="4" Text="Rok" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
             </Grid>
         </Border>
 
-        <CollectionView Grid.Row="1" x:Name="GuessesList" Margin="0,10">
+        <CollectionView Grid.Row="3" x:Name="GuessesList" Margin="0,10">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:GuessResult">
                     <Grid ColumnDefinitions="2*,1.5*,1.3*,1.9*,*" Padding="0,4" HeightRequest="50">
@@ -44,36 +85,5 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
-
-        <VerticalStackLayout Grid.Row="3" Spacing="5" VerticalOptions="End">
-            <Border StrokeShape="RoundRectangle 10"
-                    Stroke="Transparent">
-                <CollectionView x:Name="SuggestionsList" 
-                            HeightRequest="0"
-                            IsVisible="False"
-                            BackgroundColor="#252b3d"
-                            SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Celebrity">
-                            <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="10">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnSuggestionTapped" CommandParameter="{Binding .}"/>
-                                </Border.GestureRecognizers>
-                                <Label Text="{Binding Name}" TextColor="White" />
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Border>
-            <Border StrokeShape="RoundRectangle 10">
-                <Entry x:Name="SearchEntry" 
-                   Placeholder="Wpisz nazwisko..." 
-                   TextColor="White"
-                   PlaceholderColor="Gray"
-                   BackgroundColor="#252b3d"
-                   TextChanged="OnSearchTextChanged"/>
-            </Border>
-        </VerticalStackLayout>
     </Grid>
 </ContentPage>

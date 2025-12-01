@@ -1,5 +1,6 @@
 using CelebrityGuessr.Models;
 using CelebrityGuessr.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,10 @@ namespace CelebrityGuessr.Modes
         private readonly GameService _gameService;
         private ObservableCollection<GuessResult> _guesses;
         private const double SingleSuggestionHeight = 45;
-        private const int MaxSuggestionsToShow = 5;
+        private const int MaxSuggestionsToShow = 4;
+
+        int randomZoomX;
+        int randomZoomY;
 
         public PictureMode(GameService gameService)
         {
@@ -21,7 +25,9 @@ namespace CelebrityGuessr.Modes
             _guesses = new ObservableCollection<GuessResult>();
             GuessesList.ItemsSource = _guesses;
 
-            
+            Random random = new Random();
+            randomZoomX = random.Next(-100, 100);
+            randomZoomY = random.Next(-100, 100);
 
             Shell.SetBackButtonBehavior(this, new BackButtonBehavior
             {
@@ -66,8 +72,12 @@ namespace CelebrityGuessr.Modes
             if (matches.Any())
             {
                 SuggestionsList.ItemsSource = matches;
+
+                int displayCount = Math.Min(matches.Count, MaxSuggestionsToShow);
+                double desiredHeight = displayCount * SingleSuggestionHeight;
+
                 SuggestionsList.IsVisible = true;
-                SuggestionsList.HeightRequest = 150;
+                SuggestionsList.HeightRequest = desiredHeight;
             }
             else
             {
@@ -99,6 +109,19 @@ namespace CelebrityGuessr.Modes
                 await Task.Delay(1500);
                 await Shell.Current.GoToAsync("..");
             }
+            else
+            {
+                if(ClueImage.Scale != 1.5)
+                {
+                    ClueImage.Scale -= 0.5;
+
+                    randomZoomX /= 2;
+                    ClueImage.TranslationX = randomZoomX;
+
+                    randomZoomY /= 2;
+                    ClueImage.TranslationY = randomZoomY;
+                }
+            }
         }
 
         protected override async void OnNavigatedTo(NavigatedToEventArgs args)
@@ -124,9 +147,8 @@ namespace CelebrityGuessr.Modes
 
             ClueImage.Scale = 3;
 
-            var random = new Random();
-            ClueImage.TranslationX = random.Next(-100, 100);
-            ClueImage.TranslationY = random.Next(-100, 100);
+            ClueImage.TranslationX = randomZoomX;
+            ClueImage.TranslationY = randomZoomY;
         }
 
         private void ShowFullImage(string imageUrl)

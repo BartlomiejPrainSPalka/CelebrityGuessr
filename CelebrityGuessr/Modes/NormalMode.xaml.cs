@@ -1,6 +1,7 @@
 using CelebrityGuessr.Models;
 using CelebrityGuessr.Services;
 using System.Collections.ObjectModel;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace CelebrityGuessr.Modes
         private readonly GameService _gameService;
         private ObservableCollection<GuessResult> _guesses;
         private const double SingleSuggestionHeight = 45;
-        private const int MaxSuggestionsToShow = 5;
+        private const int MaxSuggestionsToShow = 4;
 
         public NormalMode(GameService gameService)
         {
@@ -73,8 +74,12 @@ namespace CelebrityGuessr.Modes
             if (matches.Any())
             {
                 SuggestionsList.ItemsSource = matches;
+
+                int displayCount = Math.Min(matches.Count, MaxSuggestionsToShow);
+                double desiredHeight = displayCount * SingleSuggestionHeight;
+
                 SuggestionsList.IsVisible = true;
-                SuggestionsList.HeightRequest = 150;
+                SuggestionsList.HeightRequest = desiredHeight;
             }
             else
             {

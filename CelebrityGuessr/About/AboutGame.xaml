@@ -4,52 +4,67 @@
              x:Class="CelebrityGuessr.About.AboutGame"
              BackgroundColor="#070b1a"
              Title="O grze">
-    <VerticalStackLayout>
-        <Label
-            Text="Gra jest inspirowana grą Wordle, w której odgaduję się słowa, ale zamiast odgadywać słowa odgadujemy celebrytów."
-            TextColor="White"
-            Margin="10"
-            FontSize="Subtitle"
-            />
-        <Label
-            Text="Tryb Klasyczny:"
-            TextColor="White"
-            Margin="15,40,15,15"
-            />
-        <Label
-            Text="- Gracz ma na celu odgadnąć celebrytę na podstawie różnic i podobieństw względem innych celebrytów, takich jak:"
-            TextColor="White"
-            Margin="10"
-            />
-        <Label
-            Text="- Płeć,"
-            TextColor="White"
-            Margin="50,5,0,0"
-            />
-        <Label
-            Text="- Kraj pochodzenia"
-            TextColor="White"
-            Margin="50,5,0,0"
-            />
-        <Label
-            Text="- Wykonywany zawód"
-            TextColor="White"
-            Margin="50,5,0,0"
-            />
-        <Label
-            Text="- Rok urodzenia"
-            TextColor="White"
-            Margin="50,5,0,0"
-            />
-        <Label
-            Text="Tryb Zdjęcia:"
-            TextColor="White"
-            Margin="15,40,15,15"
-            />
-        <Label
-            Text="- W tym trybie gracz ma do dyspozycji przybliżone zdjęcie celebryty (by nie było załatwo) na podstawie, którego ma on odpowoedzieć jak nazywa cię celebryta na zdjęciu."
-            TextColor="White"
-            Margin="10"
-            />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout>
+            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
+                <Label
+                    Text="Gra jest inspirowana grą Loldle i innymi podobnymi, w których odgaduję się bohaterów z gier, serialów i innych, ale zamiast odgadywać bohaterów odgadujemy celebrytów."
+                    TextColor="White"
+                    FontSize="Subtitle"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Center"
+                    Margin="5"/>
+            </Border>
+            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
+                <VerticalStackLayout>
+                    <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#070b1a">
+                        <Label
+                        Text="Tryb Klasyczny:"
+                        TextColor="White"
+                        Margin="15,5,15,5"/>
+                    </Border>
+                    <Label
+                        Text="Gracz ma na celu odgadnąć celebrytę na podstawie różnic i podobieństw względem innych celebrytów, takich jak:"
+                        TextColor="White"
+                        Margin="10"
+                    />
+                    <Label
+                        Text="• Płeć,"
+                        TextColor="White"
+                        Margin="50,5,0,0"
+                    />
+                    <Label
+                        Text="• Kraj pochodzenia"
+                        TextColor="White"
+                        Margin="50,5,0,0"
+                    />
+                    <Label
+                        Text="• Wykonywany zawód"
+                        TextColor="White"
+                        Margin="50,5,0,0"
+                    />
+                    <Label
+                        Text="• Rok urodzenia"
+                        TextColor="White"
+                        Margin="50,5,0,5"
+                    />
+                </VerticalStackLayout>
+            </Border>
+            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
+                <VerticalStackLayout>
+                    <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#070b1a">
+                        <Label
+                        Text="Tryb Zdjęcia:"
+                        TextColor="White"
+                        Margin="15,5,15,5"/>
+                    </Border>
+                    <Label
+                        Text="W tym trybie gracz ma do dyspozycji przybliżone zdjęcie celebryty (by nie było załatwo) na podstawie, którego ma on odpowoedzieć jak nazywa cię celebryta na zdjęciu."
+                        TextColor="White"
+                        Margin="10"
+                    />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

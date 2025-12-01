@@ -50,7 +50,7 @@ namespace CelebrityGuessr.Services
 
         public string GetTargetCelebrityImageUrl()
         {
-            return _targetCelebrity.ImageUrl ?? "Unknown";
+            return _targetCelebrity.ImageUrl;
         }
 
         public void StartNewGame()
