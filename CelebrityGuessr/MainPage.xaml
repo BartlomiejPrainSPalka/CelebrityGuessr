@@ -44,7 +44,7 @@
 
 
                         <Label Text="Graj" 
-                               TextColor="White" 
+                               TextColor="{StaticResource AccentColor}" 
                                VerticalOptions="Center"
                                HorizontalTextAlignment="Start"
                                FontSize="16" 
@@ -52,7 +52,7 @@
                                Grid.Column="1"/>
 
                         <Image x:Name="MainButtonIcon" 
-                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='White'}"
+                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='#FFC107'}"
                                Grid.Column="2"
                                VerticalOptions="Center" 
                                Margin="0,0,5,0" />
@@ -65,7 +65,7 @@
                         <Button Text="Podstawowy" 
                                 Clicked="OnNormalClicked"
                                 BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="White"
+                                TextColor="{StaticResource AccentColor}"
                                 HeightRequest="50"
                                 CornerRadius="8"
                                 BorderColor="{StaticResource AccentColor}" 
@@ -75,7 +75,7 @@
                         <Button Text="Zdjęcie" 
                                 Clicked="OnPictureClicked"
                                 BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="White"
+                                TextColor="{StaticResource AccentColor}"
                                 HeightRequest="50"
                                 CornerRadius="8"
                                 BorderColor="{StaticResource AccentColor}" 
@@ -111,7 +111,7 @@
 
 
                         <Label Text="Info" 
-                               TextColor="White" 
+                               TextColor="{StaticResource AccentColor}" 
                                VerticalOptions="Center"
                                HorizontalTextAlignment="Start"
                                FontSize="16" 
@@ -119,7 +119,7 @@
                                Grid.Column="1"/>
 
                         <Image x:Name="MainButtonIcon2" 
-                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='White'}"
+                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='#FFC107'}"
                                Grid.Column="2"
                                VerticalOptions="Center" 
                                Margin="0,0,5,0" />
@@ -132,7 +132,7 @@
                         <Button Text="O grze" 
                                 Clicked="OnAboutGameClicked"
                                 BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="White"
+                                TextColor="{StaticResource AccentColor}"
                                 HeightRequest="50"
                                 CornerRadius="8"
                                 BorderColor="{StaticResource AccentColor}" 
@@ -142,7 +142,7 @@
                         <Button Text="Twórcy" 
                                 Clicked="OnCreatorsClicked"
                                 BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="White"
+                                TextColor="{StaticResource AccentColor}"
                                 HeightRequest="50"
                                 CornerRadius="8"
                                 BorderColor="{StaticResource AccentColor}" 
