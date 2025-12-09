@@ -1,9 +1,6 @@
 using CelebrityGuessr.Models;
 using CelebrityGuessr.Services;
 using System.Collections.ObjectModel;
-using System.Formats.Asn1;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CelebrityGuessr.Modes
 {

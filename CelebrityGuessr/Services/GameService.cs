@@ -1,10 +1,5 @@
 ﻿using CelebrityGuessr.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Maui.Storage;
 
 namespace CelebrityGuessr.Services
 {
@@ -50,7 +45,7 @@ namespace CelebrityGuessr.Services
 
         public string GetTargetCelebrityImageUrl()
         {
-            return _targetCelebrity.ImageUrl;
+            return _targetCelebrity!.ImageUrl!;
         }
 
         public void StartNewGame()

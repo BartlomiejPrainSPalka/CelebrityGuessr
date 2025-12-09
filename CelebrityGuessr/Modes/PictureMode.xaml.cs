@@ -1,9 +1,6 @@
 using CelebrityGuessr.Models;
 using CelebrityGuessr.Services;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CelebrityGuessr.Modes
 {
@@ -106,7 +103,7 @@ namespace CelebrityGuessr.Modes
 
                 await DisplayAlert("Gratulacje!", $"Zgad³eœ! To {selectedCeleb.Name}", "OK");
 
-                await Task.Delay(1500);
+                await Task.Delay(500);
                 await Shell.Current.GoToAsync("..");
             }
             else
