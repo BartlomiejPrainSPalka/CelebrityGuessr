@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:CelebrityGuessr.Models"
              x:Class="CelebrityGuessr.Modes.NormalMode"
-             Title="Tryb Klasyczny"
+             Title="Tryb Podstawowy"
              BackgroundColor="#070b1a">
 
     <Grid RowDefinitions="Auto, Auto, Auto, *" Padding="5">

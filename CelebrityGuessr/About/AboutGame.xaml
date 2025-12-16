@@ -8,7 +8,7 @@
         <VerticalStackLayout>
             <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
                 <Label
-                    Text="Gra jest inspirowana grą Loldle i innymi podobnymi, w których odgaduję się bohaterów z gier, serialów i innych, ale zamiast odgadywać bohaterów odgadujemy celebrytów."
+                    Text="Gra jest inspirowana grą Loldle i innymi podobnymi, w których celem jest odgadnięcie bohaterów z gier, serialów i innych, ale zamiast odgadywać bohaterów odgadujemy prawdziwe osoby."
                     TextColor="White"
                     FontSize="Subtitle"
                     VerticalTextAlignment="Center"
@@ -19,12 +19,31 @@
                 <VerticalStackLayout>
                     <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#070b1a">
                         <Label
+                            Text="Ogólne:"
+                            TextColor="White"
+                            Margin="15,5,15,5"/>
+                    </Border>
+                    <Label
+                        Text="1. W każdym trybie na początku losowana jest osoba do odgadnięcia"
+                        TextColor="White"
+                        Margin="10"/>
+
+                    <Label
+                        Text="2. Jeżeli gracz nie posiada wystarczających informacji do odgadnięcia i nie wybrał wcześniej żadnej osoby, powinien wpisać dowolną osobę w celu zdobycia informacji na jej temat."
+                        TextColor="White"
+                        Margin="10"/>
+                </VerticalStackLayout>
+            </Border>
+            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
+                <VerticalStackLayout>
+                    <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#070b1a">
+                        <Label
                         Text="Tryb Klasyczny:"
                         TextColor="White"
                         Margin="15,5,15,5"/>
                     </Border>
                     <Label
-                        Text="Gracz ma na celu odgadnąć celebrytę na podstawie różnic i podobieństw względem innych celebrytów, takich jak:"
+                        Text="Gracz ma na celu odgadnąć osobę na podstawie różnic i podobieństw względem innych celebrytów, takich jak:"
                         TextColor="White"
                         Margin="10"
                     />
@@ -48,6 +67,12 @@
                         TextColor="White"
                         Margin="50,5,0,5"
                     />
+                    <Label
+                        Text="Na początku rozgrywki gracz nie posiada żadnych informacji, z czasem trwania gry zdobywa wiedzę na temat poprawnej osoby."
+                        TextColor="White"
+                        Margin="10"
+                    />
+
                 </VerticalStackLayout>
             </Border>
             <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
@@ -59,7 +84,7 @@
                         Margin="15,5,15,5"/>
                     </Border>
                     <Label
-                        Text="W tym trybie gracz ma do dyspozycji przybliżone zdjęcie celebryty (by nie było załatwo) na podstawie, którego ma on odpowoedzieć jak nazywa cię celebryta na zdjęciu."
+                        Text="W tym trybie gracz ma do dyspozycji przybliżone zdjęcie celebryty (by nie było załatwo) na podstawie, którego ma on odpowiedzieć jak nazywa się osoba na zdjęciu."
                         TextColor="White"
                         Margin="10"
                     />
