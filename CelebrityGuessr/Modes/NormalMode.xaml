@@ -2,88 +2,188 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:CelebrityGuessr.Models"
-             x:Class="CelebrityGuessr.Modes.NormalMode"
-             Title="Tryb Podstawowy"
-             BackgroundColor="#070b1a">
+             x:Class="CelebrityGuessr.Modes.NormalMode">
 
-    <Grid RowDefinitions="Auto, Auto, Auto, *" Padding="5">
+    <ContentPage.Resources>
+        <Color x:Key="CardBg">#161B33</Color>
+        <Color x:Key="InputBg">#1E2440</Color>
+        <Color x:Key="CardStroke">#2A315A</Color>
+        <Color x:Key="AccentColor">#FFC107</Color>
 
-        <VerticalStackLayout Grid.Row="0" Margin="10">
-            <Border StrokeShape="RoundRectangle 10" HeightRequest="50">
-                <Label Text="Zgadnij wylosowanego celebryte!"
+        <Style x:Key="BadgeLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="BadgeBorderStyle" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            <Setter Property="Stroke" Value="Transparent" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Padding" Value="4" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#05060F" Offset="0.0" />
+                <GradientStop Color="#0F1230" Offset="0.55" />
+                <GradientStop Color="#1A1145" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid RowDefinitions="Auto, Auto, Auto, *" Padding="12,10">
+
+            <!--  Nagłówek  -->
+            <Border Grid.Row="0"
+                    StrokeShape="RoundRectangle 14"
+                    Stroke="{StaticResource CardStroke}"
+                    StrokeThickness="1"
+                    BackgroundColor="{StaticResource CardBg}"
+                    Padding="14,12"
+                    Margin="0,0,0,10">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,6" Radius="16" Opacity="0.35" />
+                </Border.Shadow>
+                <Label Text="Zgadnij wylosowanego celebrytę!"
                        TextColor="White"
-                       BackgroundColor="#252b3d"
-                       VerticalTextAlignment="Center"
-                       HorizontalTextAlignment="Center"/>
+                       FontAttributes="Bold"
+                       FontSize="15"
+                       HorizontalTextAlignment="Center" />
             </Border>
-        </VerticalStackLayout>
 
-        <VerticalStackLayout Grid.Row="1" Spacing="5" VerticalOptions="End">
-            <Border StrokeShape="RoundRectangle 10" Stroke="White" StrokeThickness="2">
-                <Entry x:Name="SearchEntry" 
-                   Placeholder="Wpisz nazwisko..." 
-                   TextColor="White"
-                   PlaceholderColor="Gray"
-                   BackgroundColor="#252b3d"
-                   TextChanged="OnSearchTextChanged"/>
+            <!--  Pole wyszukiwania  -->
+            <Border Grid.Row="1"
+                    StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource CardStroke}"
+                    StrokeThickness="1.5"
+                    BackgroundColor="{StaticResource InputBg}"
+                    Margin="0,0,0,4">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.25" />
+                </Border.Shadow>
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup Name="FocusStates">
+                        <VisualState Name="Focused">
+                            <VisualState.Setters>
+                                <Setter Property="Stroke" Value="{StaticResource AccentColor}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState Name="Unfocused">
+                            <VisualState.Setters>
+                                <Setter Property="Stroke" Value="{StaticResource CardStroke}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+
+                <Entry x:Name="SearchEntry"
+                       Placeholder="Wpisz nazwisko..."
+                       TextColor="White"
+                       PlaceholderColor="#7F86AD"
+                       BackgroundColor="Transparent"
+                       Margin="8,0"
+                       TextChanged="OnSearchTextChanged" />
             </Border>
-        </VerticalStackLayout>
-        <VerticalStackLayout ZIndex="10" Grid.Row="2" Grid.RowSpan="2">
-            <Border StrokeShape="RoundRectangle 10"
-                    Stroke="Transparent">
-                <CollectionView x:Name="SuggestionsList"
-                            HeightRequest="0"
-                            IsVisible="False"
-                            BackgroundColor="#252b3d"
-                            SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Celebrity">
-                            <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="10">
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnSuggestionTapped" CommandParameter="{Binding .}"/>
-                                </Border.GestureRecognizers>
-                                <Label Text="{Binding Name}" TextColor="White" />
+
+            <!--  Podpowiedzi  -->
+            <VerticalStackLayout ZIndex="10" Grid.Row="2" Grid.RowSpan="2">
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource CardStroke}"
+                        StrokeThickness="1"
+                        BackgroundColor="{StaticResource InputBg}"
+                        Padding="0">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,8" Radius="16" Opacity="0.4" />
+                    </Border.Shadow>
+
+                    <CollectionView x:Name="SuggestionsList"
+                                HeightRequest="0"
+                                IsVisible="False"
+                                BackgroundColor="Transparent"
+                                SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Celebrity">
+                                <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="14,10">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnSuggestionTapped" CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="{Binding Name}" TextColor="White" FontSize="14" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Border>
+            </VerticalStackLayout>
+
+            <!--  Nagłówki kolumn  -->
+            <Border Grid.Row="2"
+                    Stroke="{StaticResource AccentColor}"
+                    StrokeThickness="1"
+                    BackgroundColor="{StaticResource CardBg}"
+                    Padding="8"
+                    Margin="0,10,0,0"
+                    StrokeShape="RoundRectangle 12">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.3" />
+                </Border.Shadow>
+                <Grid ColumnDefinitions="1.6*,0.9*,1.1*,1.3*,0.7*,0.7*,0.9*,0.9*" Padding="0,4">
+                    <Label Grid.Column="0" Text="Celebryta" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Grid.Column="1" Text="Płeć" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Grid.Column="2" Text="Kraj" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Grid.Column="3" Text="Zawód" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Grid.Column="4" Text="Rok Urodzenia" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Grid.Column="5" Text="Wzrost" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Grid.Column="6" Text="Włosy" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                    <Label Grid.Column="7" Text="Obs. Instagram" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
+                </Grid>
+            </Border>
+
+            <!--  Lista zgadnięć  -->
+            <CollectionView Grid.Row="3" x:Name="GuessesList" Margin="0,10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:GuessResult">
+                        <Grid ColumnDefinitions="1.6*,0.9*,1.1*,1.3*,0.7*,0.7*,0.9*,0.9*" Padding="0,4" HeightRequest="52">
+                            <Border Grid.Column="0" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding NameColor}">
+                                <Label Text="{Binding GuessData.Name}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" HorizontalTextAlignment="Center" />
                             </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </Border>
-        </VerticalStackLayout>
-        <Border Grid.Row="2" Stroke="#FFC107" BackgroundColor="Transparent" Padding="10" Margin="0, 10, 0, 0" StrokeShape="RoundRectangle 15">
-            <Grid ColumnDefinitions="2*,1.5*,1.3*,1.9*,*" Padding="0,4">
-                <Label Grid.Column="0" Text="Celebryta" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="1" Text="Płeć" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="2" Text="Kraj" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="3" Text="Zawód" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-                <Label Grid.Column="4" Text="Rok" TextColor="#FFC107" FontSize="12" HorizontalOptions="Center" FontAttributes="Bold"/>
-            </Grid>
-        </Border>
-
-        <CollectionView Grid.Row="3" x:Name="GuessesList" Margin="0,10">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:GuessResult">
-                    <Grid ColumnDefinitions="2*,1.5*,1.3*,1.9*,*" Padding="0,4" HeightRequest="50">
-                        <Border Grid.Column="0" BackgroundColor="{Binding NameColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <Label Text="{Binding GuessData.Name}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="WordWrap" HorizontalTextAlignment="Center"/>
-                        </Border>
-                        <Border Grid.Column="1" BackgroundColor="{Binding GenderColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <Label Text="{Binding GuessData.Gender}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="WordWrap"/>
-                        </Border>
-                        <Border Grid.Column="2" BackgroundColor="{Binding NationalityColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <Label Text="{Binding GuessData.Nationality}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="WordWrap"/>
-                        </Border>
-                        <Border Grid.Column="3" BackgroundColor="{Binding ProfessionColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <Label Text="{Binding GuessData.Profession}" TextColor="White" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
-                        </Border>
-                        <Border Grid.Column="4" BackgroundColor="{Binding YearColor}" StrokeShape="RoundRectangle 5" Margin="1" Padding="2">
-                            <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="2">
-                                <Label Text="{Binding GuessData.BirthYear}" FontSize="10" TextColor="White"/>
-                                <Label Text="{Binding YearArrow}" FontSize="10" TextColor="White" FontAttributes="Bold"/>
-                            </HorizontalStackLayout>
-                        </Border>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                            <Border Grid.Column="1" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding GenderColor}">
+                                <Label Text="{Binding GuessData.Gender}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" />
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding NationalityColor}">
+                                <Label Text="{Binding GuessData.Nationality}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" />
+                            </Border>
+                            <Border Grid.Column="3" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding ProfessionColor}">
+                                <Label Text="{Binding GuessData.Profession}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="TailTruncation" />
+                            </Border>
+                            <Border Grid.Column="4" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding YearColor}">
+                                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="1">
+                                    <Label Text="{Binding GuessData.BirthYear}" FontSize="10" TextColor="White" />
+                                    <Label Text="{Binding YearArrow}" FontSize="10" TextColor="White" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                            </Border>
+                            <Border Grid.Column="5" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding HeightColor}">
+                                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="1">
+                                    <Label Text="{Binding GuessData.HeightCm}" FontSize="10" TextColor="White" />
+                                    <Label Text="{Binding HeightArrow}" FontSize="10" TextColor="White" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                            </Border>
+                            <Border Grid.Column="6" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding HairColorResult}">
+                                <Label Text="{Binding GuessData.HairColor}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" />
+                            </Border>
+                            <Border Grid.Column="7" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding FollowersColor}">
+                                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="1">
+                                    <Label Text="{Binding GuessData.FollowersThousands}" FontSize="9" TextColor="White" />
+                                    <Label Text="{Binding FollowersArrow}" FontSize="10" TextColor="White" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
     </Grid>
 </ContentPage>

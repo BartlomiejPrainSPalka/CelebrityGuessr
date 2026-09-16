@@ -25,6 +25,17 @@ namespace CelebrityGuessr.Models
 
         [Column("zdjecie_url")]
         public string? ImageUrl { get; set; }
+
+        // Wzrost w centymetrach. 0 = brak danych.
+        [Column("wzrost")]
+        public int HeightCm { get; set; }
+
+        [Column("kolor_wlosow")]
+        public string? HairColor { get; set; }
+
+        // Liczba obserwujących w tysiącach (np. 15000 = 15 mln). 0 = brak danych.
+        [Column("obserwujacy")]
+        public int FollowersThousands { get; set; }
     }
 
     public class GuessResult
@@ -36,5 +47,13 @@ namespace CelebrityGuessr.Models
         public string ProfessionColor { get; set; } = "Gray";
         public string YearColor { get; set; } = "Gray";
         public string YearArrow { get; set; } = "";
+
+        public string HeightColor { get; set; } = "Gray";
+        public string HeightArrow { get; set; } = "";
+
+        public string HairColorResult { get; set; } = "Gray";
+
+        public string FollowersColor { get; set; } = "Gray";
+        public string FollowersArrow { get; set; } = "";
     }
 }

@@ -2,94 +2,146 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CelebrityGuessr.About.AboutGame"
-             BackgroundColor="#070b1a"
              Title="O grze">
-    <ScrollView>
-        <VerticalStackLayout>
-            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
-                <Label
-                    Text="Gra jest inspirowana grą Loldle i innymi podobnymi, w których celem jest odgadnięcie bohaterów z gier, serialów i innych, ale zamiast odgadywać bohaterów odgadujemy prawdziwe osoby."
-                    TextColor="White"
-                    FontSize="Subtitle"
-                    VerticalTextAlignment="Center"
-                    HorizontalTextAlignment="Center"
-                    Margin="5"/>
-            </Border>
-            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
-                <VerticalStackLayout>
-                    <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#070b1a">
-                        <Label
-                            Text="Ogólne:"
-                            TextColor="White"
-                            Margin="15,5,15,5"/>
-                    </Border>
-                    <Label
-                        Text="1. W każdym trybie na początku losowana jest osoba do odgadnięcia"
-                        TextColor="White"
-                        Margin="10"/>
 
-                    <Label
-                        Text="2. Jeżeli gracz nie posiada wystarczających informacji do odgadnięcia i nie wybrał wcześniej żadnej osoby, powinien wpisać dowolną osobę w celu zdobycia informacji na jej temat."
-                        TextColor="White"
-                        Margin="10"/>
-                </VerticalStackLayout>
-            </Border>
-            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
-                <VerticalStackLayout>
-                    <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#070b1a">
-                        <Label
-                        Text="Tryb Klasyczny:"
-                        TextColor="White"
-                        Margin="15,5,15,5"/>
-                    </Border>
-                    <Label
-                        Text="Gracz ma na celu odgadnąć osobę na podstawie różnic i podobieństw względem innych celebrytów, takich jak:"
-                        TextColor="White"
-                        Margin="10"
-                    />
-                    <Label
-                        Text="• Płeć,"
-                        TextColor="White"
-                        Margin="50,5,0,0"
-                    />
-                    <Label
-                        Text="• Kraj pochodzenia"
-                        TextColor="White"
-                        Margin="50,5,0,0"
-                    />
-                    <Label
-                        Text="• Wykonywany zawód"
-                        TextColor="White"
-                        Margin="50,5,0,0"
-                    />
-                    <Label
-                        Text="• Rok urodzenia"
-                        TextColor="White"
-                        Margin="50,5,0,5"
-                    />
-                    <Label
-                        Text="Na początku rozgrywki gracz nie posiada żadnych informacji, z czasem trwania gry zdobywa wiedzę na temat poprawnej osoby."
-                        TextColor="White"
-                        Margin="10"
-                    />
+    <ContentPage.Resources>
+        <Color x:Key="CardBg">#161B33</Color>
+        <Color x:Key="HeaderBg">#1E2440</Color>
+        <Color x:Key="CardStroke">#2A315A</Color>
+        <Color x:Key="AccentColor">#FFC107</Color>
 
-                </VerticalStackLayout>
-            </Border>
-            <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
-                <VerticalStackLayout>
-                    <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#070b1a">
-                        <Label
-                        Text="Tryb Zdjęcia:"
-                        TextColor="White"
-                        Margin="15,5,15,5"/>
-                    </Border>
+        <Style x:Key="SectionCardStyle" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+            <Setter Property="Stroke" Value="{StaticResource CardStroke}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="BackgroundColor" Value="{StaticResource CardBg}" />
+            <Setter Property="Margin" Value="14,8" />
+            <Setter Property="Padding" Value="0,0,0,14" />
+            <Setter Property="Shadow">
+                <Setter.Value>
+                    <Shadow Brush="Black" Offset="0,8" Radius="18" Opacity="0.35" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SectionHeaderStyle" TargetType="Border">
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+            <Setter Property="BackgroundColor" Value="{StaticResource HeaderBg}" />
+            <Setter Property="Margin" Value="14,14,14,6" />
+            <Setter Property="Padding" Value="14,8" />
+        </Style>
+
+        <Style x:Key="HeaderLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource AccentColor}" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+
+        <Style x:Key="BodyLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="#E4E6F0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Margin" Value="14,4" />
+            <Setter Property="LineHeight" Value="1.25" />
+        </Style>
+
+        <Style x:Key="BulletLabelStyle" TargetType="Label" BasedOn="{StaticResource BodyLabelStyle}">
+            <Setter Property="Margin" Value="34,3,14,3" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#05060F" Offset="0.0" />
+                <GradientStop Color="#0F1230" Offset="0.55" />
+                <GradientStop Color="#1A1145" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollView>
+            <VerticalStackLayout x:Name="ContentRoot" Spacing="0" Padding="0,16,0,24" Opacity="0" TranslationY="20">
+
+                <Border Style="{StaticResource SectionCardStyle}">
                     <Label
-                        Text="W tym trybie gracz ma do dyspozycji przybliżone zdjęcie celebryty (by nie było załatwo) na podstawie, którego ma on odpowiedzieć jak nazywa się osoba na zdjęciu."
-                        TextColor="White"
-                        Margin="10"
-                    />
-                </VerticalStackLayout>
-            </Border>
-        </VerticalStackLayout>
-    </ScrollView>
+                        Text="Gra jest inspirowana grą Loldle i innymi podobnymi, w których celem jest odgadnięcie bohaterów z gier, serialów i innych, ale zamiast odgadywać bohaterów odgadujemy prawdziwe osoby."
+                        TextColor="#E4E6F0"
+                        FontSize="15"
+                        VerticalTextAlignment="Center"
+                        HorizontalTextAlignment="Center"
+                        Margin="18,16" />
+                </Border>
+
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <VerticalStackLayout>
+                        <Border Style="{StaticResource SectionHeaderStyle}">
+                            <Label Text="Ogólne" Style="{StaticResource HeaderLabelStyle}" />
+                        </Border>
+
+                        <Label Style="{StaticResource BodyLabelStyle}"
+                               Text="1. W każdym trybie na początku losowana jest osoba do odgadnięcia." />
+                        <Label Style="{StaticResource BodyLabelStyle}"
+                               Text="2. Jeżeli gracz nie posiada wystarczających informacji do odgadnięcia i nie wybrał wcześniej żadnej osoby, powinien wpisać dowolną osobę w celu zdobycia informacji na jej temat." />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <VerticalStackLayout>
+                        <Border Style="{StaticResource SectionHeaderStyle}">
+                            <Label Text="Tryb Klasyczny" Style="{StaticResource HeaderLabelStyle}" />
+                        </Border>
+
+                        <Label Style="{StaticResource BodyLabelStyle}"
+                               Text="Gracz ma na celu odgadnąć osobę na podstawie różnic i podobieństw względem innych celebrytów, takich jak:" />
+
+                        <Label Style="{StaticResource BulletLabelStyle}" Text="•  Płeć" />
+                        <Label Style="{StaticResource BulletLabelStyle}" Text="•  Kraj pochodzenia" />
+                        <Label Style="{StaticResource BulletLabelStyle}" Text="•  Wykonywany zawód" />
+                        <Label Style="{StaticResource BulletLabelStyle}" Text="•  Rok urodzenia" />
+                        <Label Style="{StaticResource BulletLabelStyle}" Text="•  Wzrost" />
+                        <Label Style="{StaticResource BulletLabelStyle}" Text="•  Kolor włosów" />
+                        <Label Style="{StaticResource BulletLabelStyle}" Text="•  Liczba obserwujących w social mediach" />
+
+                        <Label Style="{StaticResource BodyLabelStyle}"
+                               Text="Na początku rozgrywki gracz nie posiada żadnych informacji, z czasem trwania gry zdobywa wiedzę na temat poprawnej osoby." />
+
+                        <Border Style="{StaticResource SectionHeaderStyle}">
+                            <Label Text="Oznaczenia kolorów" Style="{StaticResource HeaderLabelStyle}" FontSize="14" />
+                        </Border>
+
+                        <HorizontalStackLayout Margin="14,2" Spacing="8">
+                            <BoxView Color="Green" WidthRequest="16" HeightRequest="16" CornerRadius="4" VerticalOptions="Center" />
+                            <Label Style="{StaticResource BodyLabelStyle}" Margin="0" Text="Trafienie" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Margin="14,2" Spacing="8">
+                            <BoxView Color="Orange" WidthRequest="16" HeightRequest="16" CornerRadius="4" VerticalOptions="Center" />
+                            <Label Style="{StaticResource BodyLabelStyle}" Margin="0" Text="Blisko (podobny wzrost, pokrewny kolor włosów lub zbliżona popularność)" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Margin="14,2" Spacing="8">
+                            <BoxView Color="Red" WidthRequest="16" HeightRequest="16" CornerRadius="4" VerticalOptions="Center" />
+                            <Label Style="{StaticResource BodyLabelStyle}" Margin="0" Text="Brak trafienia" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Margin="14,2,14,10" Spacing="8">
+                            <BoxView Color="Gray" WidthRequest="16" HeightRequest="16" CornerRadius="4" VerticalOptions="Center" />
+                            <Label Style="{StaticResource BodyLabelStyle}" Margin="0" Text="Brak danych o tej osobie" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <Label Style="{StaticResource BodyLabelStyle}"
+                               Text="Przy wzroście i liczbie obserwujących dodatkowo pojawia się strzałka (↑/↓) pokazująca, czy szukana osoba jest wyżej/ma ich więcej, czy odwrotnie." />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <VerticalStackLayout>
+                        <Border Style="{StaticResource SectionHeaderStyle}">
+                            <Label Text="Tryb Zdjęcia" Style="{StaticResource HeaderLabelStyle}" />
+                        </Border>
+
+                        <Label Style="{StaticResource BodyLabelStyle}"
+                               Text="W tym trybie gracz ma do dyspozycji przybliżone zdjęcie celebryty (by nie było za łatwo), na podstawie którego ma odpowiedzieć, jak nazywa się osoba na zdjęciu." />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

@@ -2,158 +2,172 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CelebrityGuessr.MainPage"
-             BackgroundColor="#070b1a"
              IconImageSource="cblogo.png"
              NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Resources>
-        <Color x:Key="MenuBGColor">#1a1a1a</Color>
-        <Color x:Key="SubMenuBGColor">#1c1c1c</Color>
+        <Color x:Key="MenuBGColor">#161B33</Color>
+        <Color x:Key="SubMenuBGColor">#1E2440</Color>
         <Color x:Key="AccentColor">#FFC107</Color>
+        <Color x:Key="AccentSoft">#FFD54F</Color>
+        <Color x:Key="CardStroke">#2A315A</Color>
+
+        <Style x:Key="MenuLabelStyle" TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource AccentColor}" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="HorizontalTextAlignment" Value="Start" />
+        </Style>
+
+        <Style x:Key="SubButtonStyle" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="{StaticResource SubMenuBGColor}" />
+            <Setter Property="TextColor" Value="{StaticResource AccentColor}" />
+            <Setter Property="HeightRequest" Value="52" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderColor" Value="{StaticResource AccentColor}" />
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HorizontalOptions" Value="Fill" />
+            <Setter Property="Shadow">
+                <Setter.Value>
+                    <Shadow Brush="Black" Offset="0,3" Radius="8" Opacity="0.25" />
+                </Setter.Value>
+            </Setter>
+        </Style>
     </ContentPage.Resources>
-    <Grid RowDefinitions="auto,auto,auto,auto" ColumnDefinitions="*, auto, *" HorizontalOptions="Center">
-        <Image Source="cblogo.png"
-               Grid.Row="0"
-               Grid.Column="1"
-               WidthRequest="200"
-               HeightRequest="200"
-               Margin="10"
-               />
-        <VerticalStackLayout Padding="10" Grid.Row="1" Grid.Column="1">
-            <Border BackgroundColor="{StaticResource MenuBGColor}" 
-                StrokeThickness="0" 
-                StrokeShape="RoundRectangle 8,8,8,8"
-                WidthRequest="280">
 
-                <VerticalStackLayout Spacing="0">
+    <Grid>
+        <!--  Tło z delikatnym gradientem  -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#05060F" Offset="0.0" />
+                <GradientStop Color="#0F1230" Offset="0.55" />
+                <GradientStop Color="#1A1145" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
 
-                    <Grid x:Name="MainButton"
-                      
-                          Padding="15" 
-                          HeightRequest="55">
+        <Grid RowDefinitions="Auto,Auto,Auto,*"
+              ColumnDefinitions="*,Auto,*"
+              HorizontalOptions="Center"
+              VerticalOptions="Center"
+              RowSpacing="4">
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMainButtonClicked" />
-                        </Grid.GestureRecognizers>
+            <!--  Logo  -->
+            <Image x:Name="LogoImage"
+                   Source="cblogo.png"
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   WidthRequest="190"
+                   HeightRequest="190"
+                   Margin="10,20,10,10"
+                   Opacity="0">
+                <Image.Shadow>
+                    <Shadow Brush="#FFC107" Offset="0,0" Radius="30" Opacity="0.35" />
+                </Image.Shadow>
+            </Image>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+            <!--  Karta 1: Graj  -->
+            <VerticalStackLayout Padding="10" Grid.Row="1" Grid.Column="1">
+                <Border x:Name="Card1"
+                        BackgroundColor="{StaticResource MenuBGColor}"
+                        Stroke="{StaticResource CardStroke}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 16,16,16,16"
+                        WidthRequest="290"
+                        Opacity="0"
+                        TranslationY="24">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,10" Radius="24" Opacity="0.45" />
+                    </Border.Shadow>
 
+                    <VerticalStackLayout Spacing="0">
 
-                        <Label Text="Graj" 
-                               TextColor="{StaticResource AccentColor}" 
-                               VerticalOptions="Center"
-                               HorizontalTextAlignment="Start"
-                               FontSize="16" 
-                               FontAttributes="Bold" 
-                               Grid.Column="1"/>
+                        <Grid x:Name="MainButton" Padding="16" HeightRequest="58">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMainButtonClicked" />
+                            </Grid.GestureRecognizers>
 
-                        <Image x:Name="MainButtonIcon" 
-                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='#FFC107'}"
-                               Grid.Column="2"
-                               VerticalOptions="Center" 
-                               Margin="0,0,5,0" />
-                    </Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                    <VerticalStackLayout x:Name="SubButtonsContainer" 
-                                         Spacing="1"
-                                         BackgroundColor="{StaticResource SubMenuBGColor}">
+                            <Label Text="Graj" Style="{StaticResource MenuLabelStyle}" Grid.Column="1" />
 
-                        <Button Text="Podstawowy" 
-                                Clicked="OnNormalClicked"
-                                BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="{StaticResource AccentColor}"
-                                HeightRequest="50"
-                                CornerRadius="8"
-                                BorderColor="{StaticResource AccentColor}" 
-                                BorderWidth="1"
-                                HorizontalOptions="Fill"/>
+                            <Image x:Name="MainButtonIcon"
+                                   Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=18, Color='#FFC107'}"
+                                   Grid.Column="2"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,6,0" />
+                        </Grid>
 
-                        <Button Text="Zdjęcie" 
-                                Clicked="OnPictureClicked"
-                                BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="{StaticResource AccentColor}"
-                                HeightRequest="50"
-                                CornerRadius="8"
-                                BorderColor="{StaticResource AccentColor}" 
-                                BorderWidth="1"
-                                HorizontalOptions="Fill"/>
+                        <BoxView HeightRequest="1" Color="{StaticResource CardStroke}" Margin="16,0" />
+
+                        <VerticalStackLayout x:Name="SubButtonsContainer"
+                                             Spacing="8"
+                                             Padding="12"
+                                             BackgroundColor="Transparent">
+
+                            <Button Text="Podstawowy" Clicked="OnNormalClicked" Style="{StaticResource SubButtonStyle}" />
+                            <Button Text="Zdjęcie" Clicked="OnPictureClicked" Style="{StaticResource SubButtonStyle}" />
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Border>
+                </Border>
+            </VerticalStackLayout>
 
-        </VerticalStackLayout>
-        <VerticalStackLayout Padding="10" Grid.Row="2" Grid.Column="1">
-            <Border BackgroundColor="{StaticResource MenuBGColor}" 
-                StrokeThickness="0" 
-                StrokeShape="RoundRectangle 8,8,8,8"
-                WidthRequest="280">
+            <!--  Karta 2: Info  -->
+            <VerticalStackLayout Padding="10" Grid.Row="2" Grid.Column="1">
+                <Border x:Name="Card2"
+                        BackgroundColor="{StaticResource MenuBGColor}"
+                        Stroke="{StaticResource CardStroke}"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 16,16,16,16"
+                        WidthRequest="290"
+                        Opacity="0"
+                        TranslationY="24">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,10" Radius="24" Opacity="0.45" />
+                    </Border.Shadow>
 
-                <VerticalStackLayout Spacing="0">
+                    <VerticalStackLayout Spacing="0">
 
-                    <Grid x:Name="MainButton2"
-                      
-                          Padding="15" 
-                          HeightRequest="55">
+                        <Grid x:Name="MainButton2" Padding="16" HeightRequest="58">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMainButtonClicked2" />
+                            </Grid.GestureRecognizers>
 
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMainButtonClicked2" />
-                        </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                            <Label Text="Info" Style="{StaticResource MenuLabelStyle}" Grid.Column="1" />
 
+                            <Image x:Name="MainButtonIcon2"
+                                   Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=18, Color='#FFC107'}"
+                                   Grid.Column="2"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,6,0" />
+                        </Grid>
 
-                        <Label Text="Info" 
-                               TextColor="{StaticResource AccentColor}" 
-                               VerticalOptions="Center"
-                               HorizontalTextAlignment="Start"
-                               FontSize="16" 
-                               FontAttributes="Bold" 
-                               Grid.Column="1"/>
+                        <BoxView HeightRequest="1" Color="{StaticResource CardStroke}" Margin="16,0" />
 
-                        <Image x:Name="MainButtonIcon2" 
-                               Source="{FontImageSource Glyph='▶', FontFamily=MaterialDesignIcons, Size=20, Color='#FFC107'}"
-                               Grid.Column="2"
-                               VerticalOptions="Center" 
-                               Margin="0,0,5,0" />
-                    </Grid>
+                        <VerticalStackLayout x:Name="SubButtonsContainer2"
+                                             Spacing="8"
+                                             Padding="12"
+                                             BackgroundColor="Transparent">
 
-                    <VerticalStackLayout x:Name="SubButtonsContainer2" 
-                                         Spacing="1"
-                                         BackgroundColor="{StaticResource SubMenuBGColor}">
-
-                        <Button Text="O grze" 
-                                Clicked="OnAboutGameClicked"
-                                BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="{StaticResource AccentColor}"
-                                HeightRequest="50"
-                                CornerRadius="8"
-                                BorderColor="{StaticResource AccentColor}" 
-                                BorderWidth="1"
-                                HorizontalOptions="Fill"/>
-
-                        <Button Text="Twórcy" 
-                                Clicked="OnCreatorsClicked"
-                                BackgroundColor="{StaticResource SubMenuBGColor}"
-                                TextColor="{StaticResource AccentColor}"
-                                HeightRequest="50"
-                                CornerRadius="8"
-                                BorderColor="{StaticResource AccentColor}" 
-                                BorderWidth="1"
-                                HorizontalOptions="Fill"/>
+                            <Button Text="O grze" Clicked="OnAboutGameClicked" Style="{StaticResource SubButtonStyle}" />
+                            <Button Text="Twórcy" Clicked="OnCreatorsClicked" Style="{StaticResource SubButtonStyle}" />
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
-                </VerticalStackLayout>
-            </Border>
+                </Border>
+            </VerticalStackLayout>
 
-        </VerticalStackLayout>
+        </Grid>
     </Grid>
-
 
 </ContentPage>

@@ -1,5 +1,6 @@
 ﻿using CelebrityGuessr.Modes;
 using CelebrityGuessr.About;
+
 namespace CelebrityGuessr
 {
     public partial class MainPage : ContentPage
@@ -7,68 +8,81 @@ namespace CelebrityGuessr
         private bool _isExpanded1 = false;
         private bool _isExpanded2 = false;
         private const uint AnimationDuration = 300;
-        private const double ExpandedHeight = 101;
+        private const double ExpandedHeight = 130;
 
         public MainPage()
         {
             InitializeComponent();
+
             SubButtonsContainer.HeightRequest = 0;
             SubButtonsContainer.IsVisible = true;
             MainButtonIcon.Rotation = 0;
 
-            //ustawienia 2 menu przycisków
             SubButtonsContainer2.HeightRequest = 0;
             SubButtonsContainer2.IsVisible = true;
             MainButtonIcon2.Rotation = 0;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _ = PlayEntranceAnimationAsync();
+        }
+
+        // Płynne, stopniowane wejście: logo -> karta 1 -> karta 2
+        private async Task PlayEntranceAnimationAsync()
+        {
+            LogoImage.Opacity = 0;
+            LogoImage.Scale = 0.9;
+            Card1.Opacity = 0;
+            Card1.TranslationY = 24;
+            Card2.Opacity = 0;
+            Card2.TranslationY = 24;
+
+            await Task.WhenAll(
+                LogoImage.FadeTo(1, 400, Easing.CubicOut),
+                LogoImage.ScaleTo(1, 400, Easing.CubicOut)
+            );
+
+            await Task.WhenAll(
+                Card1.FadeTo(1, 350, Easing.CubicOut),
+                Card1.TranslateTo(0, 0, 350, Easing.CubicOut)
+            );
+
+            await Task.WhenAll(
+                Card2.FadeTo(1, 350, Easing.CubicOut),
+                Card2.TranslateTo(0, 0, 350, Easing.CubicOut)
+            );
+        }
+
         private void OnMainButtonClicked(object sender, EventArgs e)
         {
             _isExpanded1 = !_isExpanded1;
-
-            if (_isExpanded1)
-            {
-                MainButtonIcon.RotateTo(90, AnimationDuration, Easing.SinOut);
-
-
-                var expandAnimation = new Animation(v => SubButtonsContainer.HeightRequest = v, 0, ExpandedHeight, Easing.CubicOut);
-
-                expandAnimation.Commit(this, "ExpandMenu", length: AnimationDuration);
-            }
-            else
-            {
-                MainButtonIcon.RotateTo(0, AnimationDuration, Easing.SinIn);
-
-                var collapseAnimation = new Animation(v => SubButtonsContainer.HeightRequest = v, ExpandedHeight, 0, Easing.CubicIn);
-
-                collapseAnimation.Commit(this, "CollapseMenu", length: AnimationDuration, finished: (v, b) =>
-                {
-                    
-                });
-            }
+            ToggleSubMenu(SubButtonsContainer, MainButtonIcon, _isExpanded1);
         }
 
         private void OnMainButtonClicked2(object sender, EventArgs e)
         {
             _isExpanded2 = !_isExpanded2;
+            ToggleSubMenu(SubButtonsContainer2, MainButtonIcon2, _isExpanded2);
+        }
 
-            if (_isExpanded2)
+        // Wspólna logika rozwijania/zwijania podmenu, żeby nie duplikować kodu
+        private void ToggleSubMenu(VerticalStackLayout container, Image icon, bool expand)
+        {
+            if (expand)
             {
-                MainButtonIcon2.RotateTo(90, AnimationDuration, Easing.SinOut);
+                icon.RotateTo(90, AnimationDuration, Easing.SinOut);
 
-                var expandAnimation = new Animation(v => SubButtonsContainer2.HeightRequest = v, 0, ExpandedHeight, Easing.CubicOut);
-
-                expandAnimation.Commit(this, "ExpandMenu", length: AnimationDuration);
+                var expandAnimation = new Animation(v => container.HeightRequest = v, 0, ExpandedHeight, Easing.CubicOut);
+                expandAnimation.Commit(this, "ExpandMenu" + container.Id, length: AnimationDuration);
             }
             else
             {
-                MainButtonIcon2.RotateTo(0, AnimationDuration, Easing.SinIn);
+                icon.RotateTo(0, AnimationDuration, Easing.SinIn);
 
-                var collapseAnimation = new Animation(v => SubButtonsContainer2.HeightRequest = v, ExpandedHeight, 0, Easing.CubicIn);
-
-                collapseAnimation.Commit(this, "CollapseMenu", length: AnimationDuration, finished: (v, b) =>
-                {
-                });
+                var collapseAnimation = new Animation(v => container.HeightRequest = v, ExpandedHeight, 0, Easing.CubicIn);
+                collapseAnimation.Commit(this, "CollapseMenu" + container.Id, length: AnimationDuration);
             }
         }
 
@@ -76,56 +90,54 @@ namespace CelebrityGuessr
         {
             if (sender is Button button)
             {
-                button.BackgroundColor = Color.FromArgb("#FFC107");
-                await button.ScaleTo(1.05, 50);
-                await button.ScaleTo(1.0, 50);
-                button.BackgroundColor = Color.FromArgb("#1c1c1c");
+                await AnimateButtonPress(button);
                 await Shell.Current.GoToAsync(nameof(NormalMode));
             }
         }
-
 
         private async void OnPictureClicked(object sender, EventArgs e)
         {
             if (sender is Button button)
             {
-                button.BackgroundColor = Color.FromArgb("#FFC107");
-                await button.ScaleTo(1.05, 50);
-                await button.ScaleTo(1.0, 50);
-                button.BackgroundColor = Color.FromArgb("#1c1c1c");
+                await AnimateButtonPress(button);
                 await Shell.Current.GoToAsync(nameof(PictureMode));
             }
         }
 
         private async void OnAboutGameClicked(object sender, EventArgs e)
         {
-            var aboutGame = new AboutGame();
             if (sender is Button button)
             {
-                button.BackgroundColor = Color.FromArgb("#FFC107");
-                await button.ScaleTo(1.05, 50);
-                await button.ScaleTo(1.0, 50);
-                button.BackgroundColor = Color.FromArgb("#1c1c1c");
-                await Navigation.PushAsync(aboutGame);
+                await AnimateButtonPress(button);
+                await Navigation.PushAsync(new AboutGame());
             }
         }
 
         private async void OnCreatorsClicked(object sender, EventArgs e)
         {
-            var creators = new Creators();
             if (sender is Button button)
             {
-                button.BackgroundColor = Color.FromArgb("#FFC107");
-                await button.ScaleTo(1.05, 50);
-                await button.ScaleTo(1.0, 50);
-                button.BackgroundColor = Color.FromArgb("#1c1c1c");
-                await Navigation.PushAsync(creators);
+                await AnimateButtonPress(button);
+                await Navigation.PushAsync(new Creators());
             }
         }
 
-        private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+        // Krótkie, "sprężyste" podświetlenie i skala przycisku po kliknięciu
+        private static async Task AnimateButtonPress(Button button)
         {
+            var originalColor = button.BackgroundColor;
 
+            button.BackgroundColor = Color.FromArgb("#FFC107");
+            await Task.WhenAll(
+                button.ScaleTo(1.05, 60, Easing.CubicOut),
+                button.FadeTo(0.85, 60)
+            );
+            await Task.WhenAll(
+                button.ScaleTo(1.0, 90, Easing.CubicIn),
+                button.FadeTo(1.0, 90)
+            );
+
+            button.BackgroundColor = originalColor;
         }
     }
 }

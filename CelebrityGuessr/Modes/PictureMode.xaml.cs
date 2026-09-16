@@ -1,4 +1,4 @@
-using CelebrityGuessr.Models;
+﻿using CelebrityGuessr.Models;
 using CelebrityGuessr.Services;
 using System.Collections.ObjectModel;
 
@@ -10,6 +10,23 @@ namespace CelebrityGuessr.Modes
         private ObservableCollection<GuessResult> _guesses;
         private const double SingleSuggestionHeight = 45;
         private const int MaxSuggestionsToShow = 4;
+
+        // Czas, po którym uznajemy, że zdjęcie się nie wczytało, i losujemy nową osobę
+        private const int ImageLoadTimeoutSeconds = 5;
+        // Zabezpieczenie przed nieskończoną pętlą, gdyby wszystkie zdjęcia były niedostępne
+        // (np. brak internetu) - po tylu próbach pokazujemy komunikat zamiast losować w kółko
+        private const int MaxLoadAttempts = 8;
+
+        private static readonly HttpClient _httpClient = CreateHttpClient();
+
+        private static HttpClient CreateHttpClient()
+        {
+            var client = new HttpClient();
+            // Wikimedia Commons (i część innych serwerów) odrzuca żądania bez nagłówka
+            // User-Agent zwracając 403 Forbidden. Bez tego część zdjęć nigdy się nie wczyta.
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("CelebrityGuessrApp/1.0 (contact: example@example.com)");
+            return client;
+        }
 
         int randomZoomX;
         int randomZoomY;
@@ -41,9 +58,9 @@ namespace CelebrityGuessr.Modes
         private async Task ConfirmExit()
         {
             bool answer = await DisplayAlert(
-                "Wyj�cie",
-                "Czy na pewno chcesz wyj��? Stracisz progres oraz wylosowana zostanie nowa osoba.",
-                "Tak, wyjd�",
+                "Wyjœcie",
+                "Czy na pewno chcesz wyjœæ? Stracisz progres oraz wylosowana zostanie nowa osoba.",
+                "Tak, wyjdŸ",
                 "Anuluj");
 
             if (answer)
@@ -101,14 +118,14 @@ namespace CelebrityGuessr.Modes
             {
                 ShowFullImage(selectedCeleb.ImageUrl ?? "not avaible");
 
-                await DisplayAlert("Gratulacje!", $"Zgad�e�! To {selectedCeleb.Name}", "OK");
+                await DisplayAlert("Gratulacje!", $"Zgad³eœ! To {selectedCeleb.Name}", "OK");
 
                 await Task.Delay(500);
                 await Shell.Current.GoToAsync("..");
             }
             else
             {
-                if(ClueImage.Scale != 1.5)
+                if (ClueImage.Scale != 1.5)
                 {
                     ClueImage.Scale -= 0.5;
 
@@ -127,13 +144,48 @@ namespace CelebrityGuessr.Modes
 
             await _gameService.InitializeDatabase();
 
-            var target = _gameService.GetTargetCelebrity();
+            await LoadTargetImageWithTimeoutAsync();
+        }
 
-            if (target != null && !string.IsNullOrEmpty(target.ImageUrl))
+        // Pobiera zdjęcie wylosowanej osoby. Jeśli nie uda się go wczytać w ciągu
+        // ImageLoadTimeoutSeconds (np. martwy link, brak internetu), losuje nową osobę
+        // i próbuje ponownie - aż do skutku lub osiągnięcia limitu prób.
+        private async Task LoadTargetImageWithTimeoutAsync()
+        {
+            for (int attempt = 0; attempt < MaxLoadAttempts; attempt++)
             {
-                ClueImage.Source = target.ImageUrl;
-                ApplyRandomZoom();
+                var target = _gameService.GetTargetCelebrity();
+
+                if (target == null || string.IsNullOrEmpty(target.ImageUrl))
+                {
+                    _gameService.StartNewGame();
+                    continue;
+                }
+
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(ImageLoadTimeoutSeconds));
+
+                try
+                {
+                    byte[] imageBytes = await _httpClient.GetByteArrayAsync(target.ImageUrl, cts.Token);
+
+                    ClueImage.Source = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                    ApplyRandomZoom();
+                    return;
+                }
+                catch (Exception)
+                {
+                    // Timeout (5s) albo błąd pobierania - losujemy inną osobę i próbujemy dalej
+                    _gameService.StartNewGame();
+                }
             }
+
+            // Wszystkie próby zawiodły - prawdopodobnie brak internetu
+            await DisplayAlert(
+                "Nie udało wczytać się obrazu",
+                "Sprawdź połączenie z internetem lub spróbuj ponownie.",
+                "OK");
+
+            await Shell.Current.GoToAsync("..");
         }
 
         private void ApplyRandomZoom()

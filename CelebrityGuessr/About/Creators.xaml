@@ -2,42 +2,68 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CelebrityGuessr.About.Creators"
-             Title="Twórcy"
-             BackgroundColor="#070b1a">
-    <VerticalStackLayout>
-        <Border StrokeShape="RoundRectangle 10" Margin="10" BackgroundColor="#252b3d">
-            <VerticalStackLayout>
-                <Label 
-                    Text="Aplikacja była współtworzona przez:"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Center" 
-                    TextColor="White"
-                    Margin="2"/>
-                <Label
-                    Text="Huberta Siedlarza"
-                    TextColor="White"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Center" 
-                    Margin="2"/>
-                <Label
-                    Text="I"
-                    TextColor="White"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Center" 
-                    Margin="2"/>
-                <Label
-                    Text="Bartłomieja Pałkę"
-                    TextColor="White"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Center" 
-                    Margin="2"/>
-                <Label
-                    Text="i ChatGPT (tak z 30%)"
-                    TextColor="#252b4f"
-                    VerticalOptions="Center" 
-                    HorizontalOptions="Center" 
-                    Margin="2"/>
-            </VerticalStackLayout>
-        </Border>
-    </VerticalStackLayout>
+             Title="Twórcy">
+
+    <ContentPage.Resources>
+        <Color x:Key="CardBg">#161B33</Color>
+        <Color x:Key="CardStroke">#2A315A</Color>
+        <Color x:Key="AccentColor">#FFC107</Color>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#05060F" Offset="0.0" />
+                <GradientStop Color="#0F1230" Offset="0.55" />
+                <GradientStop Color="#1A1145" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <VerticalStackLayout VerticalOptions="Center" Padding="24">
+            <Border x:Name="CreatorsCard"
+                    StrokeShape="RoundRectangle 18"
+                    Stroke="{StaticResource CardStroke}"
+                    StrokeThickness="1"
+                    BackgroundColor="{StaticResource CardBg}"
+                    Padding="26,24"
+                    Opacity="0"
+                    Scale="0.94">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,10" Radius="24" Opacity="0.4" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Aplikacja była współtworzona przez:"
+                           TextColor="#B7BBD9"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label Text="Hubert Siedlarz"
+                           TextColor="{StaticResource AccentColor}"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="&amp;"
+                           TextColor="#6B7099"
+                           FontSize="14"
+                           HorizontalOptions="Center" />
+
+                    <Label Text="Bartłomiej Pałka"
+                           TextColor="{StaticResource AccentColor}"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           HorizontalOptions="Center" />
+
+                    <!--  mały easter egg, celowo prawie niewidoczny na tle karty  -->
+                    <Label Text="i ChatGPT (tak z 30%)"
+                           TextColor="#181E38"
+                           FontSize="12"
+                           HorizontalOptions="Center"
+                           Margin="0,10,0,0" />
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>
