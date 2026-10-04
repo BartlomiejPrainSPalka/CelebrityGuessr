@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:CelebrityGuessr.Models"
-             x:Class="CelebrityGuessr.Modes.NormalMode">
+             x:Class="CelebrityGuessr.Modes.NormalMode"
+             Title="Tryb Podstawowy">
 
     <ContentPage.Resources>
         <Color x:Key="CardBg">#161B33</Color>
@@ -10,18 +11,27 @@
         <Color x:Key="CardStroke">#2A315A</Color>
         <Color x:Key="AccentColor">#FFC107</Color>
 
-        <Style x:Key="BadgeLabelStyle" TargetType="Label">
-            <Setter Property="TextColor" Value="White" />
-            <Setter Property="FontSize" Value="11" />
-            <Setter Property="HorizontalOptions" Value="Center" />
-            <Setter Property="VerticalOptions" Value="Center" />
-        </Style>
-
-        <Style x:Key="BadgeBorderStyle" TargetType="Border">
+        <Style x:Key="ChipBorderStyle" TargetType="Border">
             <Setter Property="StrokeShape" Value="RoundRectangle 8" />
             <Setter Property="Stroke" Value="Transparent" />
-            <Setter Property="Margin" Value="2" />
-            <Setter Property="Padding" Value="4" />
+            <Setter Property="Padding" Value="14,8,14,12" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="MinimumWidthRequest" Value="78" />
+        </Style>
+
+        <Style x:Key="ChipCaptionStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="TextColor" Value="#CCFFFFFF" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+        </Style>
+
+        <Style x:Key="ChipValueStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="LineBreakMode" Value="TailTruncation" />
         </Style>
     </ContentPage.Resources>
 
@@ -34,7 +44,7 @@
             </LinearGradientBrush>
         </Grid.Background>
 
-        <Grid RowDefinitions="Auto, Auto, Auto, *" Padding="12,10">
+        <Grid RowDefinitions="Auto, Auto, *" Padding="12,10">
 
             <!--  Nagłówek  -->
             <Border Grid.Row="0"
@@ -47,11 +57,34 @@
                 <Border.Shadow>
                     <Shadow Brush="Black" Offset="0,6" Radius="16" Opacity="0.35" />
                 </Border.Shadow>
-                <Label Text="Zgadnij wylosowanego celebrytę!"
-                       TextColor="White"
-                       FontAttributes="Bold"
-                       FontSize="15"
-                       HorizontalTextAlignment="Center" />
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Label Grid.Column="1"
+                           Text="Zgadnij wylosowanego celebrytę!"
+                           TextColor="White"
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           HorizontalTextAlignment="Center" />
+
+                    <Border Grid.Column="2"
+                            StrokeShape="RoundRectangle 14"
+                            Stroke="{StaticResource AccentColor}"
+                            StrokeThickness="1.5"
+                            BackgroundColor="Transparent"
+                            Padding="0"
+                            WidthRequest="28"
+                            HeightRequest="28"
+                            HorizontalOptions="End">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHelpTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="?"
+                               TextColor="{StaticResource AccentColor}"
+                               FontAttributes="Bold"
+                               FontSize="14"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+                </Grid>
             </Border>
 
             <!--  Pole wyszukiwania  -->
@@ -86,11 +119,12 @@
                        PlaceholderColor="#7F86AD"
                        BackgroundColor="Transparent"
                        Margin="8,0"
+                       FontSize="16"
                        TextChanged="OnSearchTextChanged" />
             </Border>
 
-            <!--  Podpowiedzi  -->
-            <VerticalStackLayout ZIndex="10" Grid.Row="2" Grid.RowSpan="2">
+            <!--  Podpowiedzi - nakładka nad listą wyników  -->
+            <VerticalStackLayout ZIndex="10" Grid.Row="2" VerticalOptions="Start">
                 <Border StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource CardStroke}"
                         StrokeThickness="1"
@@ -107,11 +141,11 @@
                                 SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:Celebrity">
-                                <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="14,10">
+                                <Border Stroke="Transparent" BackgroundColor="Transparent" Padding="14,12">
                                     <Border.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnSuggestionTapped" CommandParameter="{Binding .}" />
                                     </Border.GestureRecognizers>
-                                    <Label Text="{Binding Name}" TextColor="White" FontSize="14" />
+                                    <Label Text="{Binding Name}" TextColor="White" FontSize="15" />
                                 </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -119,71 +153,337 @@
                 </Border>
             </VerticalStackLayout>
 
-            <!--  Nagłówki kolumn  -->
-            <Border Grid.Row="2"
-                    Stroke="{StaticResource AccentColor}"
-                    StrokeThickness="1"
-                    BackgroundColor="{StaticResource CardBg}"
-                    Padding="8"
-                    Margin="0,10,0,0"
-                    StrokeShape="RoundRectangle 12">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.3" />
-                </Border.Shadow>
-                <Grid ColumnDefinitions="1.6*,0.9*,1.1*,1.3*,0.7*,0.7*,0.9*,0.9*" Padding="0,4">
-                    <Label Grid.Column="0" Text="Celebryta" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                    <Label Grid.Column="1" Text="Płeć" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                    <Label Grid.Column="2" Text="Kraj" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                    <Label Grid.Column="3" Text="Zawód" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                    <Label Grid.Column="4" Text="Rok Urodzenia" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                    <Label Grid.Column="5" Text="Wzrost" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                    <Label Grid.Column="6" Text="Włosy" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                    <Label Grid.Column="7" Text="Obs. Instagram" TextColor="{StaticResource AccentColor}" FontSize="10" HorizontalOptions="Center" FontAttributes="Bold" />
-                </Grid>
-            </Border>
-
-            <!--  Lista zgadnięć  -->
-            <CollectionView Grid.Row="3" x:Name="GuessesList" Margin="0,10">
+            <!--  Lista zgadnięć - karty zamiast tabeli, czytelne na telefonie  -->
+            <CollectionView Grid.Row="2" x:Name="GuessesList" Margin="0,8,0,0">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
+                </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:GuessResult">
-                        <Grid ColumnDefinitions="1.6*,0.9*,1.1*,1.3*,0.7*,0.7*,0.9*,0.9*" Padding="0,4" HeightRequest="52">
-                            <Border Grid.Column="0" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding NameColor}">
-                                <Label Text="{Binding GuessData.Name}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" HorizontalTextAlignment="Center" />
-                            </Border>
-                            <Border Grid.Column="1" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding GenderColor}">
-                                <Label Text="{Binding GuessData.Gender}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" />
-                            </Border>
-                            <Border Grid.Column="2" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding NationalityColor}">
-                                <Label Text="{Binding GuessData.Nationality}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" />
-                            </Border>
-                            <Border Grid.Column="3" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding ProfessionColor}">
-                                <Label Text="{Binding GuessData.Profession}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="TailTruncation" />
-                            </Border>
-                            <Border Grid.Column="4" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding YearColor}">
-                                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="1">
-                                    <Label Text="{Binding GuessData.BirthYear}" FontSize="10" TextColor="White" />
-                                    <Label Text="{Binding YearArrow}" FontSize="10" TextColor="White" FontAttributes="Bold" />
-                                </HorizontalStackLayout>
-                            </Border>
-                            <Border Grid.Column="5" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding HeightColor}">
-                                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="1">
-                                    <Label Text="{Binding GuessData.HeightCm}" FontSize="10" TextColor="White" />
-                                    <Label Text="{Binding HeightArrow}" FontSize="10" TextColor="White" FontAttributes="Bold" />
-                                </HorizontalStackLayout>
-                            </Border>
-                            <Border Grid.Column="6" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding HairColorResult}">
-                                <Label Text="{Binding GuessData.HairColor}" Style="{StaticResource BadgeLabelStyle}" FontSize="10" LineBreakMode="WordWrap" />
-                            </Border>
-                            <Border Grid.Column="7" Style="{StaticResource BadgeBorderStyle}" BackgroundColor="{Binding FollowersColor}">
-                                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="1">
-                                    <Label Text="{Binding GuessData.FollowersThousands}" FontSize="9" TextColor="White" />
-                                    <Label Text="{Binding FollowersArrow}" FontSize="10" TextColor="White" FontAttributes="Bold" />
-                                </HorizontalStackLayout>
-                            </Border>
-                        </Grid>
+                        <Border StrokeShape="RoundRectangle 14"
+                                Stroke="{StaticResource CardStroke}"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource CardBg}"
+                                Padding="12">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.3" />
+                            </Border.Shadow>
+
+                            <VerticalStackLayout Spacing="10">
+
+                                <!--  Nazwisko - zawsze na pełną szerokość, dobrze widoczne  -->
+                                <Border StrokeShape="RoundRectangle 10" Stroke="Transparent" Padding="16,10,16,14" BackgroundColor="{Binding NameColor}">
+                                    <Label Text="{Binding GuessData.Name}"
+                                           TextColor="White"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center"
+                                           LineBreakMode="TailTruncation" />
+                                </Border>
+
+                                <!--  Reszta cech jako "chipsy" zawijające się do kolejnej linii  -->
+                                <FlexLayout Direction="Row" Wrap="Wrap" JustifyContent="Center" AlignItems="Center">
+
+                                    <Border Style="{StaticResource ChipBorderStyle}" BackgroundColor="{Binding GenderColor}" Margin="3">
+                                        <VerticalStackLayout Spacing="0">
+                                            <Label Text="PŁEĆ" Style="{StaticResource ChipCaptionStyle}" />
+                                            <Label Text="{Binding GuessData.Gender}" Style="{StaticResource ChipValueStyle}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <Border Style="{StaticResource ChipBorderStyle}" BackgroundColor="{Binding NationalityColor}" Margin="3">
+                                        <VerticalStackLayout Spacing="0">
+                                            <Label Text="KRAJ" Style="{StaticResource ChipCaptionStyle}" />
+                                            <Label Text="{Binding GuessData.Nationality}" Style="{StaticResource ChipValueStyle}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <Border Style="{StaticResource ChipBorderStyle}" BackgroundColor="{Binding ProfessionColor}" Margin="3">
+                                        <VerticalStackLayout Spacing="0">
+                                            <Label Text="ZAWÓD" Style="{StaticResource ChipCaptionStyle}" />
+                                            <Label Text="{Binding GuessData.Profession}" Style="{StaticResource ChipValueStyle}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <Border Style="{StaticResource ChipBorderStyle}" BackgroundColor="{Binding YearColor}" Margin="3">
+                                        <VerticalStackLayout Spacing="0">
+                                            <Label Text="ROK" Style="{StaticResource ChipCaptionStyle}" />
+                                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="3">
+                                                <Label Text="{Binding GuessData.BirthYear}" Style="{StaticResource ChipValueStyle}" />
+                                                <Label Text="{Binding YearArrow}" Style="{StaticResource ChipValueStyle}" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <Border Style="{StaticResource ChipBorderStyle}" BackgroundColor="{Binding HeightColor}" Margin="3">
+                                        <VerticalStackLayout Spacing="0">
+                                            <Label Text="WZROST" Style="{StaticResource ChipCaptionStyle}" />
+                                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="3">
+                                                <Label Text="{Binding GuessData.HeightCm}" Style="{StaticResource ChipValueStyle}" />
+                                                <Label Text="{Binding HeightArrow}" Style="{StaticResource ChipValueStyle}" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <Border Style="{StaticResource ChipBorderStyle}" BackgroundColor="{Binding HairColorResult}" Margin="3">
+                                        <VerticalStackLayout Spacing="0">
+                                            <Label Text="WŁOSY" Style="{StaticResource ChipCaptionStyle}" />
+                                            <Label Text="{Binding GuessData.HairColor}" Style="{StaticResource ChipValueStyle}" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <Border Style="{StaticResource ChipBorderStyle}" BackgroundColor="{Binding FollowersColor}" Margin="3">
+                                        <VerticalStackLayout Spacing="0">
+                                            <Label Text="OBSERW." Style="{StaticResource ChipCaptionStyle}" />
+                                            <HorizontalStackLayout HorizontalOptions="Center" Spacing="3">
+                                                <Label Text="{Binding GuessData.FollowersThousands}" Style="{StaticResource ChipValueStyle}" />
+                                                <Label Text="{Binding FollowersArrow}" Style="{StaticResource ChipValueStyle}" />
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                </FlexLayout>
+                            </VerticalStackLayout>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+        </Grid>
+
+        <!--  Overlay z podpowiedzią - tłumaczy chipsy i kolory. Domyślnie ukryty.  -->
+        <Grid x:Name="HelpOverlay"
+              IsVisible="False"
+              Opacity="0"
+              BackgroundColor="#B3000000">
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnHelpOverlayBackgroundTapped" />
+            </Grid.GestureRecognizers>
+
+            <Border StrokeShape="RoundRectangle 20"
+                    Stroke="{StaticResource CardStroke}"
+                    StrokeThickness="1"
+                    BackgroundColor="{StaticResource CardBg}"
+                    Padding="20,20,20,28"
+                    Margin="24"
+                    VerticalOptions="Center"
+                    MaximumWidthRequest="380">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,10" Radius="24" Opacity="0.5" />
+                </Border.Shadow>
+
+                <!--  Zatrzymuje "kliknięcie w tło" gdy dotykamy samej karty  -->
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnHelpCardTapped" />
+                </Border.GestureRecognizers>
+
+                <VerticalStackLayout Spacing="14">
+
+                    <Label Text="Jak czytać wyniki?"
+                           TextColor="{StaticResource AccentColor}"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label TextColor="#D8DAE8" FontSize="13">
+                        <Label.Text>Po każdym zgadnięciu pojawia się karta z kolorowymi polami — porównują Twoją odpowiedź z szukaną osobą.</Label.Text>
+                    </Label>
+
+                    <BoxView HeightRequest="1" Color="{StaticResource CardStroke}" />
+
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView Color="Green" WidthRequest="18" HeightRequest="18" CornerRadius="5" VerticalOptions="Center" />
+                        <Label Text="Trafienie" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView Color="Orange" WidthRequest="18" HeightRequest="18" CornerRadius="5" VerticalOptions="Center" />
+                        <Label Text="Blisko (podobny wzrost, pokrewny&#10;kolor włosów, zbliżona popularność)" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView Color="Red" WidthRequest="18" HeightRequest="18" CornerRadius="5" VerticalOptions="Center" />
+                        <Label Text="Brak trafienia" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <HorizontalStackLayout Spacing="10">
+                        <BoxView Color="Gray" WidthRequest="18" HeightRequest="18" CornerRadius="5" VerticalOptions="Center" />
+                        <Label Text="Brak danych o tej osobie" TextColor="White" FontSize="14" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="Strzałka ↑ / ↓ przy roku, wzroście i obserwujących pokazuje, czy szukana osoba ma więcej, czy mniej."
+                           TextColor="#D8DAE8"
+                           FontSize="12"
+                           Margin="0,4,0,0" />
+
+                    <BoxView HeightRequest="1" Color="{StaticResource CardStroke}" Margin="0,4" />
+
+                    <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Switch x:Name="DontShowAgainSwitch" OnColor="{StaticResource AccentColor}" />
+                        <Label Text="Nie pokazuj przy starcie" TextColor="#D8DAE8" FontSize="13" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Border StrokeShape="RoundRectangle 10"
+                            Stroke="{StaticResource AccentColor}"
+                            StrokeThickness="1.5"
+                            BackgroundColor="Transparent"
+                            Padding="18,10,18,18">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnHelpCloseTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Rozumiem"
+                               TextColor="{StaticResource AccentColor}"
+                               FontAttributes="Bold"
+                               FontSize="15"
+                               HorizontalTextAlignment="Center" />
+                    </Border>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <!--  Overlay z gratulacjami po zgadnięciu poprawnej osoby  -->
+        <Grid x:Name="WinOverlay"
+              IsVisible="False"
+              Opacity="0"
+              BackgroundColor="#CC000000">
+
+            <Border StrokeShape="RoundRectangle 24"
+                    Stroke="{StaticResource AccentColor}"
+                    StrokeThickness="1.5"
+                    BackgroundColor="{StaticResource CardBg}"
+                    Padding="24,24,24,32"
+                    Margin="28"
+                    VerticalOptions="Center"
+                    MaximumWidthRequest="380"
+                    Scale="0.9"
+                    x:Name="WinCard">
+                <Border.Shadow>
+                    <Shadow Brush="{StaticResource AccentColor}" Offset="0,0" Radius="30" Opacity="0.35" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="10">
+
+                    <Label Text="🎉" FontSize="42" HorizontalTextAlignment="Center" />
+
+                    <Label Text="Brawo, zgadłeś!"
+                           TextColor="{StaticResource AccentColor}"
+                           FontAttributes="Bold"
+                           FontSize="22"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label x:Name="WinNameLabel"
+                           TextColor="White"
+                           FontAttributes="Bold"
+                           FontSize="19"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label x:Name="WinAttemptsLabel"
+                           TextColor="#D8DAE8"
+                           FontSize="14"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,2,0,10" />
+
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="Transparent"
+                            BackgroundColor="{StaticResource AccentColor}"
+                            Padding="18,12,18,20">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPlayAgainTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Zagraj jeszcze raz"
+                               TextColor="#161B33"
+                               FontAttributes="Bold"
+                               FontSize="15"
+                               HorizontalTextAlignment="Center" />
+                    </Border>
+
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource CardStroke}"
+                            StrokeThickness="1.5"
+                            BackgroundColor="Transparent"
+                            Padding="18,12,18,20">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackToMenuTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Wróć do menu"
+                               TextColor="#D8DAE8"
+                               FontAttributes="Bold"
+                               FontSize="15"
+                               HorizontalTextAlignment="Center" />
+                    </Border>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <!--  Overlay potwierdzenia wyjścia - zastępuje systemowy DisplayAlert  -->
+        <Grid x:Name="ExitConfirmOverlay"
+              IsVisible="False"
+              Opacity="0"
+              BackgroundColor="#CC000000">
+
+            <Border StrokeShape="RoundRectangle 20"
+                    Stroke="{StaticResource CardStroke}"
+                    StrokeThickness="1"
+                    BackgroundColor="{StaticResource CardBg}"
+                    Padding="22,22,22,30"
+                    Margin="15"
+                    VerticalOptions="Center"
+                    MaximumWidthRequest="380">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,10" Radius="24" Opacity="0.5" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="14">
+
+                    <Label Text="Wyjście"
+                           TextColor="{StaticResource AccentColor}"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label Text="Czy na pewno chcesz wyjść? Stracisz progres oraz wylosowana zostanie nowa osoba."
+                           TextColor="#D8DAE8"
+                           FontSize="14"
+                           HorizontalTextAlignment="Center" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+
+                        <Border Grid.Column="0"
+                                StrokeShape="RoundRectangle 10"
+                                Stroke="{StaticResource CardStroke}"
+                                StrokeThickness="1.5"
+                                BackgroundColor="Transparent"
+                                Padding="18,18,18,18">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnExitCancelTapped" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Anuluj"
+                                   TextColor="#D8DAE8"
+                                   FontAttributes="Bold"
+                                   FontSize="15"
+                                   HorizontalTextAlignment="Center" />
+                        </Border>
+
+                        <Border Grid.Column="1"
+                                StrokeShape="RoundRectangle 10"
+                                Stroke="Transparent"
+                                BackgroundColor="#E5484D"
+                                Padding="18,18,18,18">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnExitConfirmTapped" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Tak, wyjdź"
+                                   TextColor="White"
+                                   FontAttributes="Bold"
+                                   FontSize="15"
+                                   HorizontalTextAlignment="Center" />
+                        </Border>
+
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
         </Grid>
     </Grid>
 </ContentPage>

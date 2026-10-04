@@ -8,7 +8,7 @@ namespace CelebrityGuessr
         private bool _isExpanded1 = false;
         private bool _isExpanded2 = false;
         private const uint AnimationDuration = 300;
-        private const double ExpandedHeight = 130;
+        private const double ExpandedHeight = 135;
 
         public MainPage()
         {
@@ -26,7 +26,22 @@ namespace CelebrityGuessr
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            ResetMenuState();
             _ = PlayEntranceAnimationAsync();
+        }
+
+        // Wraca do menu w stanie "czystym" - zwinięte podmenu, ikony w pozycji wyjściowej.
+        // Ważne przy powrocie z trybu gry (np. przyciskiem "Wróć do menu"), żeby gracz
+        // nie trafiał na przypadkiem rozwinięte podmenu sprzed wejścia do gry.
+        private void ResetMenuState()
+        {
+            _isExpanded1 = false;
+            SubButtonsContainer.HeightRequest = 0;
+            MainButtonIcon.Rotation = 0;
+
+            _isExpanded2 = false;
+            SubButtonsContainer2.HeightRequest = 0;
+            MainButtonIcon2.Rotation = 0;
         }
 
         // Płynne, stopniowane wejście: logo -> karta 1 -> karta 2

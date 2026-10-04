@@ -23,7 +23,8 @@
         <Style x:Key="SubButtonStyle" TargetType="Button">
             <Setter Property="BackgroundColor" Value="{StaticResource SubMenuBGColor}" />
             <Setter Property="TextColor" Value="{StaticResource AccentColor}" />
-            <Setter Property="HeightRequest" Value="52" />
+            <Setter Property="HeightRequest" Value="54" />
+            <Setter Property="Padding" Value="16,6,16,12" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="BorderColor" Value="{StaticResource AccentColor}" />
             <Setter Property="BorderWidth" Value="1" />
@@ -110,8 +111,8 @@
                                              Padding="12"
                                              BackgroundColor="Transparent">
 
-                            <Button Text="Podstawowy" Clicked="OnNormalClicked" Style="{StaticResource SubButtonStyle}" />
-                            <Button Text="Zdjęcie" Clicked="OnPictureClicked" Style="{StaticResource SubButtonStyle}" />
+                            <Button Text="Podstawowy" Clicked="OnNormalClicked" Style="{StaticResource SubButtonStyle}" Padding="10"/>
+                            <Button Text="Zdjęcie" Clicked="OnPictureClicked" Style="{StaticResource SubButtonStyle}" Padding="10"/>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
@@ -160,8 +161,8 @@
                                              Padding="12"
                                              BackgroundColor="Transparent">
 
-                            <Button Text="O grze" Clicked="OnAboutGameClicked" Style="{StaticResource SubButtonStyle}" />
-                            <Button Text="Twórcy" Clicked="OnCreatorsClicked" Style="{StaticResource SubButtonStyle}" />
+                            <Button Text="O grze" Clicked="OnAboutGameClicked" Style="{StaticResource SubButtonStyle}" Padding="10"/>
+                            <Button Text="Twórcy" Clicked="OnCreatorsClicked" Style="{StaticResource SubButtonStyle}" Padding="10"/>
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>

@@ -14,7 +14,6 @@ namespace CelebrityGuessr.Modes
         // Czas, po którym uznajemy, że zdjęcie się nie wczytało, i losujemy nową osobę
         private const int ImageLoadTimeoutSeconds = 5;
         // Zabezpieczenie przed nieskończoną pętlą, gdyby wszystkie zdjęcia były niedostępne
-        // (np. brak internetu) - po tylu próbach pokazujemy komunikat zamiast losować w kółko
         private const int MaxLoadAttempts = 8;
 
         private static readonly HttpClient _httpClient = CreateHttpClient();
@@ -30,6 +29,8 @@ namespace CelebrityGuessr.Modes
 
         int randomZoomX;
         int randomZoomY;
+        private int _attemptsCount = 0;
+        private string? _currentTargetImageUrl;
 
         public PictureMode(GameService gameService)
         {
@@ -39,34 +40,44 @@ namespace CelebrityGuessr.Modes
             _guesses = new ObservableCollection<GuessResult>();
             GuessesList.ItemsSource = _guesses;
 
-            Random random = new Random();
-            randomZoomX = random.Next(-100, 100);
-            randomZoomY = random.Next(-100, 100);
+            InitZoomOffsets();
 
             Shell.SetBackButtonBehavior(this, new BackButtonBehavior
             {
-                Command = new Command(async () => await ConfirmExit())
+                Command = new Command(async () => await ShowExitConfirmAsync())
             });
+        }
+
+        private void InitZoomOffsets()
+        {
+            Random random = new Random();
+            randomZoomX = random.Next(-100, 100);
+            randomZoomY = random.Next(-100, 100);
         }
 
         protected override bool OnBackButtonPressed()
         {
-            Dispatcher.Dispatch(async () => await ConfirmExit());
+            _ = ShowExitConfirmAsync();
             return true;
         }
 
-        private async Task ConfirmExit()
+        private async Task ShowExitConfirmAsync()
         {
-            bool answer = await DisplayAlert(
-                "Wyjœcie",
-                "Czy na pewno chcesz wyjœæ? Stracisz progres oraz wylosowana zostanie nowa osoba.",
-                "Tak, wyjdŸ",
-                "Anuluj");
+            ExitConfirmOverlay.IsVisible = true;
+            await ExitConfirmOverlay.FadeTo(1, 200, Easing.CubicOut);
+        }
 
-            if (answer)
-            {
-                await Shell.Current.GoToAsync("..");
-            }
+        private async void OnExitCancelTapped(object sender, TappedEventArgs e)
+        {
+            await ExitConfirmOverlay.FadeTo(0, 150, Easing.CubicIn);
+            ExitConfirmOverlay.IsVisible = false;
+        }
+
+        private async void OnExitConfirmTapped(object sender, TappedEventArgs e)
+        {
+            await ExitConfirmOverlay.FadeTo(0, 150, Easing.CubicIn);
+            ExitConfirmOverlay.IsVisible = false;
+            await Shell.Current.GoToAsync("..");
         }
 
         private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
@@ -110,18 +121,18 @@ namespace CelebrityGuessr.Modes
             var result = _gameService.CheckGuess(selectedCeleb);
 
             _guesses.Insert(0, result);
+            _attemptsCount++;
 
             SearchEntry.Text = string.Empty;
             SuggestionsList.IsVisible = false;
 
+            // Najnowsza próba trafia na początek listy - przewijamy tam widok,
+            // żeby nie trzeba było scrollować ręcznie.
+            GuessesList.ScrollTo(0, position: ScrollToPosition.Start, animate: true);
+
             if (result.NameColor == "Green")
             {
-                ShowFullImage(selectedCeleb.ImageUrl ?? "not avaible");
-
-                await DisplayAlert("Gratulacje!", $"Zgad³eœ! To {selectedCeleb.Name}", "OK");
-
-                await Task.Delay(500);
-                await Shell.Current.GoToAsync("..");
+                await ShowWinOverlayAsync(selectedCeleb.Name ?? "");
             }
             else
             {
@@ -169,6 +180,7 @@ namespace CelebrityGuessr.Modes
                     byte[] imageBytes = await _httpClient.GetByteArrayAsync(target.ImageUrl, cts.Token);
 
                     ClueImage.Source = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                    _currentTargetImageUrl = target.ImageUrl;
                     ApplyRandomZoom();
                     return;
                 }
@@ -181,8 +193,8 @@ namespace CelebrityGuessr.Modes
 
             // Wszystkie próby zawiodły - prawdopodobnie brak internetu
             await DisplayAlert(
-                "Nie udało wczytać się obrazu",
-                "Sprawdź połączenie z internetem lub spróbuj ponownie.",
+                "Problem z połączeniem",
+                "Nie udało się wczytać żadnego zdjęcia. Sprawdź połączenie z internetem i spróbuj ponownie.",
                 "OK");
 
             await Shell.Current.GoToAsync("..");
@@ -200,12 +212,50 @@ namespace CelebrityGuessr.Modes
             ClueImage.TranslationY = randomZoomY;
         }
 
-        private void ShowFullImage(string imageUrl)
+        private async Task ShowWinOverlayAsync(string celebrityName)
         {
-            ClueImage.Source = imageUrl;
-            ClueImage.Scale = 1;
-            ClueImage.TranslationX = 0;
-            ClueImage.TranslationY = 0;
+            WinNameLabel.Text = celebrityName;
+            WinAttemptsLabel.Text = _attemptsCount == 1
+                ? "Zgadłeś za pierwszym razem!"
+                : $"Zgadłeś w {_attemptsCount} próbach.";
+
+            // Pokazujemy pełne, nieprzybliżone zdjęcie w karcie z gratulacjami
+            WinImage.Source = _currentTargetImageUrl;
+
+            WinOverlay.IsVisible = true;
+            WinCard.Scale = 0.9;
+
+            await Task.WhenAll(
+                WinOverlay.FadeTo(1, 200, Easing.CubicOut),
+                WinCard.ScaleTo(1, 250, Easing.SpringOut)
+            );
+        }
+
+        private async void OnPlayAgainTapped(object sender, TappedEventArgs e)
+        {
+            await HideWinOverlayAsync();
+
+            _guesses.Clear();
+            _attemptsCount = 0;
+
+            InitZoomOffsets();
+            _gameService.StartNewGame();
+            await LoadTargetImageWithTimeoutAsync();
+        }
+
+        private async void OnBackToMenuTapped(object sender, TappedEventArgs e)
+        {
+            await HideWinOverlayAsync();
+            await Shell.Current.GoToAsync("..");
+        }
+
+        private async Task HideWinOverlayAsync()
+        {
+            await Task.WhenAll(
+                WinOverlay.FadeTo(0, 150, Easing.CubicIn),
+                WinCard.ScaleTo(0.9, 150, Easing.CubicIn)
+            );
+            WinOverlay.IsVisible = false;
         }
     }
 }
